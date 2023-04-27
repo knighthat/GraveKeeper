@@ -22,13 +22,16 @@ package me.knighthat.plugin.message;
 
 import lombok.Getter;
 import lombok.NonNull;
+import me.knighthat.api.style.Colorization;
 import me.knighthat.plugin.file.MessageFile;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
 
 public class Messenger {
 
+    public final static @NonNull Colorization STYLE = text -> ChatColor.translateAlternateColorCodes('&', text);
     public static @NonNull MessageFile FILE;
 
     /**
@@ -38,7 +41,8 @@ public class Messenger {
      * @param message Class contains actual message
      */
     public static void send(@NonNull Player to, @NonNull Message message) {
-        to.sendMessage(message.text());
+        String styled = STYLE.color(message.text);
+        to.sendMessage(styled);
     }
 
     /**
