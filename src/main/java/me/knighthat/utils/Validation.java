@@ -21,7 +21,7 @@
 package me.knighthat.utils;
 
 import lombok.NonNull;
-import me.knighthat.plugin.GraveKeeper;
+import me.knighthat.api.persistent.DataHandler;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
 
@@ -29,6 +29,6 @@ public class Validation {
 
     public static boolean isGrave(@NonNull Block block) {
         return block.getState() instanceof TileState state &&
-                state.getPersistentDataContainer().has(GraveKeeper.KEY);
+                state.getPersistentDataContainer().has(DataHandler.KEY);
     }
 }
