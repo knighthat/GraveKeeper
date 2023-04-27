@@ -13,6 +13,7 @@
     <description>Creates chest at player's death location, but wait, there's more!</description>
 
     <properties>
+        <plugin.subversion>DEMO</plugin.subversion>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -33,7 +34,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
-                    <finalName>${project.name}-${project.version}</finalName>
+                    <finalName>${project.name}-${project.version}-${plugin.subversion}</finalName>
                 </configuration>
             </plugin>
         </plugins>
