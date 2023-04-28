@@ -66,7 +66,7 @@ public final class Coordinates implements Serializable {
     /**
      * Creates a pair for replacing placeholders
      *
-     * @return Pair of %place_holder%:[replacement]
+     * @return Pair of %place_holder:[replacement]
      */
     public @NonNull Map<String, String> replacements() {
         Map<String, String> placeholders = new HashMap<>(3);
@@ -91,7 +91,7 @@ public final class Coordinates implements Serializable {
     /**
      * Custom toString() returns String follows format
      *
-     * @return [world=%world%,x=%x%,y=%y%,z=%z%]
+     * @return [world=%world,x=%x,y=%y,z=%z]
      */
     @Override
     public String toString() {

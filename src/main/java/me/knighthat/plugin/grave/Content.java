@@ -91,7 +91,7 @@ public final class Content implements Serializable {
     /**
      * Custom toString() returns String follows format
      *
-     * @return [item=[%MATERIAL%s],exp=%exp%]
+     * @return [item=[%MATERIAL],exp=%exp]
      */
     @Override
     public String toString() {

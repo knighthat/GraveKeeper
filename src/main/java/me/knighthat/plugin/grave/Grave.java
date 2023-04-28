@@ -133,7 +133,7 @@ public final class Grave implements Serializable {
     /**
      * Custom toString() returns String follows format
      *
-     * @return Grave{id=%id%,owner=%owner%,coordinates=%coordinates%,content=%content%,date=%date%}
+     * @return Grave{id=%id,owner=%owner,coordinates=%coordinates,content=%content,date=%date}
      */
     @Override
     public String toString() {
