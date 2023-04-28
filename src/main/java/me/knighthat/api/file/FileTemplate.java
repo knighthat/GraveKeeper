@@ -46,19 +46,14 @@ public abstract class FileTemplate {
     }
 
     private void init() {
-        if (this.file == null)
-            file = new File(this.plugin.getDataFolder(), this.fileName);
-
-        if (!this.file.exists())
-            this.plugin.saveResource(this.fileName, false);
-
+        createIfNotExist();
         reload();
     }
 
     public void reload() {
-        if (this.file == null)
-            init();
+        createIfNotExist();
 
+        assert this.file != null;
         yaml = YamlConfiguration.loadConfiguration(this.file);
     }
 
@@ -78,5 +73,13 @@ public abstract class FileTemplate {
             Debugger.err("Error while saving " + this.fileName, e.getLocalizedMessage());
             e.printStackTrace();
         }
+    }
+
+    private void createIfNotExist() {
+        if (this.file == null)
+            file = new File(this.plugin.getDataFolder(), this.fileName);
+
+        if (!this.file.exists())
+            this.plugin.saveResource(this.fileName, false);
     }
 }
