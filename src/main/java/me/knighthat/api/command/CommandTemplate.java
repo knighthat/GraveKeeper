@@ -18,39 +18,21 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin;
+package me.knighthat.api.command;
 
-import me.knighthat.api.command.CommandManager;
-import me.knighthat.debugger.Debugger;
-import me.knighthat.plugin.event.EventController;
-import me.knighthat.plugin.file.MessageFile;
-import me.knighthat.plugin.message.Messenger;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.java.JavaPlugin;
+import lombok.NonNull;
+import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.Permissible;
 
-public final class GraveKeeper extends JavaPlugin {
+interface CommandTemplate {
 
-    {
-        Debugger.LOGGER = this.getSLF4JLogger();
-        Messenger.FILE = new MessageFile(this);
-    }
+    @NonNull String getName();
 
-    @Override
-    public void onEnable() {
+    boolean playerOnly();
 
-        // Register event handler to Server
-        getServer().getPluginManager().registerEvents(new EventController(), this);
+    boolean hasPermission(@NonNull Permissible permissible);
 
-        // Register commands and tab completer
-        registerCommands();
-    }
+    boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args);
 
-
-    private void registerCommands() {
-        PluginCommand command = getCommand("gravekeeper");
-        CommandManager commandManager = new CommandManager();
-
-        command.setExecutor(commandManager);
-        command.setTabCompleter(commandManager);
-    }
+    void execute(@NonNull CommandSender sender, String @NonNull [] args);
 }

@@ -18,39 +18,34 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin;
+package me.knighthat.api.command;
 
-import me.knighthat.api.command.CommandManager;
-import me.knighthat.debugger.Debugger;
-import me.knighthat.plugin.event.EventController;
-import me.knighthat.plugin.file.MessageFile;
-import me.knighthat.plugin.message.Messenger;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.java.JavaPlugin;
+import lombok.NonNull;
+import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.Permissible;
 
-public final class GraveKeeper extends JavaPlugin {
+public abstract class SubCommand implements CommandTemplate {
 
-    {
-        Debugger.LOGGER = this.getSLF4JLogger();
-        Messenger.FILE = new MessageFile(this);
+    public abstract @NonNull String permission();
+
+    @Override
+    public @NonNull String getName() {
+        String className = getClass().getSimpleName().toLowerCase();
+        return className.replace("command", "");
     }
 
     @Override
-    public void onEnable() {
-
-        // Register event handler to Server
-        getServer().getPluginManager().registerEvents(new EventController(), this);
-
-        // Register commands and tab completer
-        registerCommands();
+    public boolean playerOnly() {
+        return false;
     }
 
+    @Override
+    public boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args) {
+        return true;
+    }
 
-    private void registerCommands() {
-        PluginCommand command = getCommand("gravekeeper");
-        CommandManager commandManager = new CommandManager();
-
-        command.setExecutor(commandManager);
-        command.setTabCompleter(commandManager);
+    @Override
+    public boolean hasPermission(@NonNull Permissible permissible) {
+        return permissible.hasPermission("grave.command.".concat(permission()));
     }
 }
