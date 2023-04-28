@@ -25,7 +25,7 @@ import lombok.NonNull;
 import me.knighthat.api.style.Colorization;
 import me.knighthat.plugin.file.MessageFile;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 import java.util.Map;
 
@@ -40,7 +40,7 @@ public class Messenger {
      * @param to      Recipient of the message
      * @param message Class contains actual message
      */
-    public static void send(@NonNull Player to, @NonNull Message message) {
+    public static void send(@NonNull CommandSender to, @NonNull Message message) {
         String styled = STYLE.color(message.text);
         to.sendMessage(styled);
     }
@@ -52,7 +52,7 @@ public class Messenger {
      * @param to   Recipient of the message
      * @param path Reference path from "message.yml"
      */
-    public static void send(@NonNull Player to, @NonNull String path) {
+    public static void send(@NonNull CommandSender to, @NonNull String path) {
         Message message = new Message(FILE.message(path));
         send(to, message);
     }
@@ -67,7 +67,7 @@ public class Messenger {
      * @param path         Reference path from "message.yml"
      * @param replacements Pair of %place_holder%:[replacement]
      */
-    public static void send(@NonNull Player to, @NonNull String path, @NonNull Map<String, String> replacements) {
+    public static void send(@NonNull CommandSender to, @NonNull String path, @NonNull Map<String, String> replacements) {
         String message = FILE.message(path);
         for (Map.Entry<String, String> entry : replacements.entrySet())
             message = message.replace(entry.getKey(), entry.getValue());

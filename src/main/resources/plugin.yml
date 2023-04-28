@@ -2,3 +2,8 @@ name: '${project.name}'
 version: '${project.version}'
 main: me.knighthat.plugin.GraveKeeper
 api-version: 1.19
+
+commands:
+  gravekeeper:
+    aliases:
+      - grave

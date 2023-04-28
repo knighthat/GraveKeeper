@@ -20,14 +20,19 @@
 
 package me.knighthat.plugin.event;
 
+import me.knighthat.api.persistent.DataHandler;
+import me.knighthat.plugin.grave.Grave;
+import me.knighthat.plugin.message.Messenger;
 import me.knighthat.utils.Validation;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -36,11 +41,6 @@ import java.util.List;
 
 public class EventController implements Listener {
 
-    /**
-     * Creates a "chest" that saves player's inventory and/or experience points
-     *
-     * @param event Called when a player dies
-     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getPlayer();
@@ -55,20 +55,35 @@ public class EventController implements Listener {
         drops.removeIf(drop -> !drop.getType().equals(Material.AIR));
     }
 
-    /**
-     * Checks and activate the recovery process
-     * when player interacts with a "chest"
-     * marked by plugin.
-     *
-     * @param event Called when player interacts to block
-     */
     @EventHandler
-    public void playerInteractWithDeathChest(PlayerInteractEvent event) {
+    public void playerInteractWithGrave(PlayerInteractEvent event) {
         Block block = event.getClickedBlock();
 
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && Validation.isGrave(block)) {
             event.setCancelled(true);
             GraveRetrievalEventHandler.process(event.getPlayer(), block);
         }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void playerBreakGrave(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+
+        if (!Validation.isGrave(block))
+            return;
+        
+        event.setCancelled(true);
+
+        String id = DataHandler.pull((TileState) block.getState());
+        Grave[] graveArr = DataHandler.pull(player);
+
+        for (Grave grave : graveArr)
+            if (grave.getId().equals(id) && grave.isValid()) {
+                GraveRetrievalEventHandler.process(event.getPlayer(), block);
+                return;
+            }
+
+        Messenger.send(player, "not_owner");
     }
 }

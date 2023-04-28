@@ -22,7 +22,6 @@ package me.knighthat.plugin.event;
 
 import lombok.NonNull;
 import me.knighthat.api.persistent.DataHandler;
-import me.knighthat.debugger.Debugger;
 import me.knighthat.plugin.grave.Grave;
 import me.knighthat.plugin.message.Messenger;
 import me.knighthat.utils.ExpCalc;
@@ -40,6 +39,11 @@ public class PlayerDeathEventHandler {
 
     private static final @NonNull Material MATERIAL = Material.CHEST;
 
+    /**
+     * Handles placing "Grave", adding NBT data to "Grave" and Player
+     *
+     * @param player Whose "Grave" belong to
+     */
     public static void process(@NonNull Player player) {
         Grave grave = registerDeathChest(player);
         Map<String, String> replacements = new HashMap<>();
@@ -47,11 +51,15 @@ public class PlayerDeathEventHandler {
         replacements.putAll(grave.getCoordinates().replacements());
 
         Messenger.send(player, "death_message", replacements);
-
-        Debugger.log(grave.getId());
-
     }
 
+    /**
+     * Creates an instance of "Grave" that stores player's info, experience points
+     * and other info, such as, location, id, owner's uuid, date
+     *
+     * @param who Whose "Grave" belong to
+     * @return Instance represents "Grave"
+     */
     private static @NonNull Grave registerDeathChest(@NonNull Player who) {
         Map<Integer, ItemStack> content = getPlayerInventory(who);
         Location location = who.getLocation();
@@ -67,6 +75,13 @@ public class PlayerDeathEventHandler {
         return grave;
     }
 
+    /**
+     * Converts player's inventory into a
+     * Map of Slot:ItemStack
+     *
+     * @param player Whose inventory will be queried
+     * @return Map of Slot:ItemStack
+     */
     private static @NonNull Map<Integer, ItemStack> getPlayerInventory(@NonNull Player player) {
         PlayerInventory inventory = player.getInventory();
         Map<Integer, ItemStack> inventoryMap = new HashMap<>(inventory.getContents().length);

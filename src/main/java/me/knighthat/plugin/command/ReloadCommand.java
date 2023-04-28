@@ -18,39 +18,23 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin;
+package me.knighthat.plugin.command;
 
-import me.knighthat.api.command.CommandManager;
-import me.knighthat.debugger.Debugger;
-import me.knighthat.plugin.event.EventController;
-import me.knighthat.plugin.file.MessageFile;
+import lombok.NonNull;
+import me.knighthat.api.command.SubCommand;
 import me.knighthat.plugin.message.Messenger;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.command.CommandSender;
 
-public final class GraveKeeper extends JavaPlugin {
+public class ReloadCommand extends SubCommand {
 
-    {
-        Debugger.LOGGER = this.getSLF4JLogger();
-        Messenger.FILE = new MessageFile(this);
+    @Override
+    public @NonNull String permission() {
+        return "reload";
     }
 
     @Override
-    public void onEnable() {
-
-        // Register event handler to Server
-        getServer().getPluginManager().registerEvents(new EventController(), this);
-
-        // Register commands and tab completer
-        registerCommands();
-    }
-
-
-    private void registerCommands() {
-        PluginCommand command = getCommand("gravekeeper");
-        CommandManager commandManager = new CommandManager();
-
-        command.setExecutor(commandManager);
-        command.setTabCompleter(commandManager);
+    public void execute(@NonNull CommandSender sender, String @NonNull [] args) {
+        Messenger.FILE.reload();
+        Messenger.send(sender, "reload");
     }
 }
