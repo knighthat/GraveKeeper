@@ -43,7 +43,7 @@ public class PlayerDeathEventHandler {
     public static void process(@NonNull Player player) {
         Grave grave = registerDeathChest(player);
         Map<String, String> replacements = new HashMap<>();
-        replacements.put("%id%", grave.getId());
+        replacements.put("%id", grave.getId());
         replacements.putAll(grave.getCoordinates().replacements());
 
         Messenger.send(player, "death_message", replacements);
