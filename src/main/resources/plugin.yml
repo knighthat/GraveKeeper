@@ -1,4 +1,4 @@
 name: '${project.name}'
 version: '${project.version}'
-main: me.knighthat.gravekeeper.GraveKeeper
+main: me.knighthat.plugin.GraveKeeper
 api-version: 1.19
