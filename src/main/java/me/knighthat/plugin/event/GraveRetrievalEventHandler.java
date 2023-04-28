@@ -22,7 +22,6 @@ package me.knighthat.plugin.event;
 
 import lombok.NonNull;
 import me.knighthat.api.persistent.DataHandler;
-import me.knighthat.debugger.Debugger;
 import me.knighthat.plugin.grave.Grave;
 import me.knighthat.plugin.message.Messenger;
 import org.bukkit.block.Block;
@@ -33,10 +32,7 @@ public class GraveRetrievalEventHandler {
 
     public static void process(@NonNull Player who, @NonNull Block clicked) {
         String id = DataHandler.pull((TileState) clicked.getState());
-
         Grave grave = DataHandler.get(who, id);
-        Debugger.log(grave.toString());
-
 
         if (grave.isValid()) {
             DataHandler.remove(who, id);
