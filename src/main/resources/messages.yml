@@ -1,0 +1,4 @@
+prefix: "&6&lDeathChest &7&k]&r "
+death_message: "&4&lYou DIED! &eLast death location, &bX:%x Y:%y Z:%z"
+not_owner: "&cYou are not the owner of this chest!"
+retrieve: "&aCongratulations! You've successfully reclaim your chest."
