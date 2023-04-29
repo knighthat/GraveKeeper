@@ -80,6 +80,6 @@ public class Messenger {
      *
      * @param text Actual message
      */
-    record Message(@Getter @NonNull String text) {
+    public record Message(@Getter @NonNull String text) {
     }
 }
