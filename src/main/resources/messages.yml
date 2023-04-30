@@ -7,6 +7,9 @@ prefix: "&6&lDeathChest &7&k]&r "
 ##############################
 reload: "&aPlugin successfully reloaded"
 no_cmd_perm: "&4You don't have permission to execute this command!"
+cmd_requires_player: "&cOnly player can execute this command!"
+player_not_found: "&4No player with name &6&l%player &4found!"
+
 
 ##############################
 #                            #
@@ -16,3 +19,8 @@ no_cmd_perm: "&4You don't have permission to execute this command!"
 death_message: "&4&lYou DIED! &eLast death location, &bX:%x Y:%y Z:%z"
 not_owner: "&cYou are not the owner of this chest!"
 retrieve: "&aCongratulations! You've successfully reclaim your chest."
+self_graves_empty: "&dYou don't have any grave"
+self_graves: "&eHere are your IDs:"
+player_graves_empty: "&d%player doesn't have any grave"
+player_graves: "&e%player's IDs:"
+

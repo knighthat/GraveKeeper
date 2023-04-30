@@ -21,6 +21,7 @@
 package me.knighthat.api.command;
 
 import lombok.NonNull;
+import me.knighthat.plugin.command.ListCommand;
 import me.knighthat.plugin.command.ReloadCommand;
 import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.Command;
@@ -41,6 +42,7 @@ public class CommandManager implements TabExecutor {
 
     static {
         SUB_COMMANDS.add(new ReloadCommand());
+        SUB_COMMANDS.add(new ListCommand());
     }
 
 
@@ -59,10 +61,12 @@ public class CommandManager implements TabExecutor {
             return true;
         }
 
-        if (!sub.prerequisite(sender, args))
+        String[] newArgs = removeFirst(args);
+
+        if (!sub.prerequisite(sender, newArgs))
             return true;
 
-        sub.execute(sender, removeFirst(args));
+        sub.execute(sender, newArgs);
 
         return true;
     }

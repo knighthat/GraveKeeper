@@ -26,6 +26,8 @@ import org.bukkit.permissions.Permissible;
 
 public abstract class SubCommand implements CommandTemplate {
 
+    protected final @NonNull String PERMISSION = "grave.command.";
+
     public abstract @NonNull String permission();
 
     @Override
@@ -46,6 +48,6 @@ public abstract class SubCommand implements CommandTemplate {
 
     @Override
     public boolean hasPermission(@NonNull Permissible permissible) {
-        return permissible.hasPermission("grave.command.".concat(permission()));
+        return permissible.hasPermission(PERMISSION.concat(permission()));
     }
 }
