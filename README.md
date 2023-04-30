@@ -23,7 +23,7 @@ PLUGIN IS CURRENTLY IN EARLY STAGE. MORE FEATURES WILL BE ADDED
 > This plugin is created using PaperMC API. Therefore, not all server distribution will be compatible. More tests will
 > be done to ensure the best possible experience for all users.
 
-To install the DeathChest plugin on your Minecraft server, follow these steps:
+To install the Grave Keeper plugin on your Minecraft server, follow these steps:
 
 1. Download the plugin from the [**SpigotMC**](https://www.spigotmc.org/resources/109521/).
 2. Copy the plugin JAR file to the `plugins` directory in your Minecraft server.
