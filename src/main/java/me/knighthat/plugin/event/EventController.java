@@ -20,6 +20,7 @@
 
 package me.knighthat.plugin.event;
 
+import me.knighthat.api.menu.PluginMenu;
 import me.knighthat.api.persistent.DataHandler;
 import me.knighthat.plugin.grave.Grave;
 import me.knighthat.plugin.message.Messenger;
@@ -34,7 +35,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -66,13 +69,13 @@ public class EventController implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void playerBreakGrave(BlockBreakEvent event) {
+    public void playerBreaksGrave(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Block block = event.getBlock();
 
         if (!Validation.isGrave(block))
             return;
-        
+
         event.setCancelled(true);
 
         String id = DataHandler.pull((TileState) block.getState());
@@ -85,5 +88,12 @@ public class EventController implements Listener {
             }
 
         Messenger.send(player, "not_owner");
+    }
+
+    @EventHandler
+    public void playerClicksInventory(InventoryClickEvent event) {
+        Inventory inventory = event.getView().getTopInventory();
+        if (inventory.getHolder() instanceof PluginMenu menu)
+            menu.onClick(event);
     }
 }
