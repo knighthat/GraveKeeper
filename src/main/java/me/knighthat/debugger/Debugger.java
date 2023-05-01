@@ -28,12 +28,16 @@ public class Debugger {
 
     public static @NonNull Logger LOGGER;
 
-    public static void err(@NonNull String message, @NonNull String cause) {
-        LOGGER.error(message);
+    public static void err(@NonNull String error, @NonNull String cause) {
+        LOGGER.error(error);
         LOGGER.error("Caused by: " + cause);
     }
 
     public static void log(@NonNull String message) {
         LOGGER.info(message);
+    }
+
+    public static void warn(@NonNull String warning) {
+        LOGGER.warn(warning);
     }
 }
