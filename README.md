@@ -17,6 +17,7 @@ PLUGIN IS CURRENTLY IN EARLY STAGE. MORE FEATURES WILL BE ADDED
 - Automatically creates chest at player's death location.
 - Includes commands to track, manipulate, and manage "grave" such as:
     - [**List**](https://github.com/knighthat/GraveKeeper/wiki/Commands#List)
+    - [**Peak**](https://github.com/knighthat/GraveKeeper/wiki/Commands#peak)
 
 ## Installation
 
