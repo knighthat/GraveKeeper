@@ -1,0 +1,7 @@
+peak_menu:
+  title: "&e%id &r@ &cX:%x Y:%y Z:%z"
+  exp:
+    material: "EXPERIENCE_BOTTLE"
+    name: "&dEXP: &a&l%exp"
+    # Should be somewhere between 46-54.
+    slot: 46
