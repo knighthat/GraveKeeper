@@ -18,42 +18,45 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin;
+package me.knighthat.plugin.file;
 
-import me.knighthat.api.command.CommandManager;
+import lombok.NonNull;
+import me.knighthat.api.file.PluginFile;
 import me.knighthat.debugger.Debugger;
-import me.knighthat.plugin.event.EventController;
-import me.knighthat.plugin.file.MenuFile;
-import me.knighthat.plugin.file.MessageFile;
-import me.knighthat.plugin.menu.MenuManager;
-import me.knighthat.plugin.message.Messenger;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.java.JavaPlugin;
+import me.knighthat.plugin.GraveKeeper;
+import org.bukkit.Material;
+import org.jetbrains.annotations.Range;
 
-public final class GraveKeeper extends JavaPlugin {
+import java.text.MessageFormat;
 
-    {
-        Debugger.LOGGER = this.getSLF4JLogger();
-        Messenger.FILE = new MessageFile(this);
-        MenuManager.FILE = new MenuFile(this);
+public class MenuFile extends PluginFile {
+
+
+    public MenuFile(@NonNull GraveKeeper plugin) {
+        super(plugin, "menu");
     }
 
-    @Override
-    public void onEnable() {
-
-        // Register event handler to Server
-        getServer().getPluginManager().registerEvents(new EventController(), this);
-
-        // Register commands and tab completer
-        registerCommands();
+    public @Range(from = 0, to = 53) int slot(@NonNull String path, int max) {
+        int slot = super.integer(path);
+        if (slot < 1 || slot > max) {
+            Debugger.warn(
+                    MessageFormat.format("{0} returns out of bound number (1 to {1})", path, max)
+            );
+            slot = 1;
+        }
+        return slot - 1;
     }
 
+    public @NonNull Material material(@NonNull String path) {
+        String materialString = super.string(path).toUpperCase();
+        try {
+            return Material.valueOf(materialString);
+        } catch (IllegalArgumentException e) {
+            Debugger.warn(
+                    MessageFormat.format("{0} returns invalid material name", path)
+            );
+            return Material.AIR;
+        }
 
-    private void registerCommands() {
-        PluginCommand command = getCommand("gravekeeper");
-        CommandManager commandManager = new CommandManager();
-
-        command.setExecutor(commandManager);
-        command.setTabCompleter(commandManager);
     }
 }

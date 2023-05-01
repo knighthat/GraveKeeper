@@ -18,26 +18,13 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.debugger;
+package me.knighthat.api.menu;
 
 import lombok.NonNull;
-import org.slf4j.Logger;
+import org.bukkit.event.inventory.InventoryClickEvent;
 
+@FunctionalInterface
+public interface InteractableMenu {
 
-public class Debugger {
-
-    public static @NonNull Logger LOGGER;
-
-    public static void err(@NonNull String error, @NonNull String cause) {
-        LOGGER.error(error);
-        LOGGER.error("Caused by: " + cause);
-    }
-
-    public static void log(@NonNull String message) {
-        LOGGER.info(message);
-    }
-
-    public static void warn(@NonNull String warning) {
-        LOGGER.warn(warning);
-    }
+    void onClick(@NonNull InventoryClickEvent event);
 }

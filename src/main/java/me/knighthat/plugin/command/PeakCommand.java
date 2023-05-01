@@ -18,42 +18,48 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin;
+package me.knighthat.plugin.command;
 
-import me.knighthat.api.command.CommandManager;
-import me.knighthat.debugger.Debugger;
-import me.knighthat.plugin.event.EventController;
-import me.knighthat.plugin.file.MenuFile;
-import me.knighthat.plugin.file.MessageFile;
+import lombok.NonNull;
+import me.knighthat.api.command.SubCommand;
+import me.knighthat.api.persistent.DataHandler;
+import me.knighthat.plugin.grave.Grave;
 import me.knighthat.plugin.menu.MenuManager;
 import me.knighthat.plugin.message.Messenger;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-public final class GraveKeeper extends JavaPlugin {
+import java.util.Map;
 
-    {
-        Debugger.LOGGER = this.getSLF4JLogger();
-        Messenger.FILE = new MessageFile(this);
-        MenuManager.FILE = new MenuFile(this);
+public class PeakCommand extends SubCommand {
+
+    @Override
+    public @NonNull String permission() {
+        return "peak";
     }
 
     @Override
-    public void onEnable() {
-
-        // Register event handler to Server
-        getServer().getPluginManager().registerEvents(new EventController(), this);
-
-        // Register commands and tab completer
-        registerCommands();
+    public boolean playerOnly() {
+        return true;
     }
 
+    @Override
+    public boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args) {
+        if (args.length == 0)
+            Messenger.send(sender, "missing_id");
+        return args.length != 0;
+    }
 
-    private void registerCommands() {
-        PluginCommand command = getCommand("gravekeeper");
-        CommandManager commandManager = new CommandManager();
+    @Override
+    public void execute(@NonNull CommandSender sender, String @NonNull [] args) {
+        Player player = (Player) sender;
+        Grave grave = DataHandler.get(player, args[0]);
 
-        command.setExecutor(commandManager);
-        command.setTabCompleter(commandManager);
+        if (!grave.isValid()) {
+            Messenger.send(sender, "no_grave_found", Map.of("%id", args[0]));
+            return;
+        }
+
+        player.openInventory(MenuManager.peak(grave));
     }
 }

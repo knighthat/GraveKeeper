@@ -22,6 +22,7 @@ package me.knighthat.plugin.command;
 
 import lombok.NonNull;
 import me.knighthat.api.command.SubCommand;
+import me.knighthat.plugin.menu.MenuManager;
 import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.CommandSender;
 
@@ -35,6 +36,7 @@ public class ReloadCommand extends SubCommand {
     @Override
     public void execute(@NonNull CommandSender sender, String @NonNull [] args) {
         Messenger.FILE.reload();
+        MenuManager.FILE.reload();
         Messenger.send(sender, "reload");
     }
 }

@@ -23,6 +23,7 @@ package me.knighthat.plugin.message;
 import lombok.Getter;
 import lombok.NonNull;
 import me.knighthat.api.style.Colorization;
+import me.knighthat.api.style.Converter;
 import me.knighthat.plugin.file.MessageFile;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -69,10 +70,7 @@ public class Messenger {
      */
     public static void send(@NonNull CommandSender to, @NonNull String path, @NonNull Map<String, String> replacements) {
         String message = FILE.message(path);
-        for (Map.Entry<String, String> entry : replacements.entrySet())
-            message = message.replace(entry.getKey(), entry.getValue());
-
-        send(to, new Message(message));
+        send(to, new Message(Converter.apply(message, replacements)));
     }
 
     /**

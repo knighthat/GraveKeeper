@@ -18,42 +18,19 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin;
+package me.knighthat.api.style;
 
-import me.knighthat.api.command.CommandManager;
-import me.knighthat.debugger.Debugger;
-import me.knighthat.plugin.event.EventController;
-import me.knighthat.plugin.file.MenuFile;
-import me.knighthat.plugin.file.MessageFile;
-import me.knighthat.plugin.menu.MenuManager;
-import me.knighthat.plugin.message.Messenger;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.java.JavaPlugin;
+import lombok.NonNull;
 
-public final class GraveKeeper extends JavaPlugin {
+import java.util.Map;
 
-    {
-        Debugger.LOGGER = this.getSLF4JLogger();
-        Messenger.FILE = new MessageFile(this);
-        MenuManager.FILE = new MenuFile(this);
-    }
+public interface Converter {
 
-    @Override
-    public void onEnable() {
+    static @NonNull String apply(@NonNull String original, @NonNull Map<String, String> replacements) {
+        String message = original;
+        for (Map.Entry<String, String> entry : replacements.entrySet())
+            message = message.replace(entry.getKey(), entry.getValue());
 
-        // Register event handler to Server
-        getServer().getPluginManager().registerEvents(new EventController(), this);
-
-        // Register commands and tab completer
-        registerCommands();
-    }
-
-
-    private void registerCommands() {
-        PluginCommand command = getCommand("gravekeeper");
-        CommandManager commandManager = new CommandManager();
-
-        command.setExecutor(commandManager);
-        command.setTabCompleter(commandManager);
+        return message;
     }
 }
