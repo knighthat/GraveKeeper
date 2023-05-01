@@ -18,23 +18,19 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin.command;
+package me.knighthat.api.style;
 
 import lombok.NonNull;
-import me.knighthat.api.command.SubCommand;
-import me.knighthat.plugin.message.Messenger;
-import org.bukkit.command.CommandSender;
 
-public class ReloadCommand extends SubCommand {
+import java.util.Map;
 
-    @Override
-    public @NonNull String permission() {
-        return "reload";
-    }
+public interface Converter {
 
-    @Override
-    public void execute(@NonNull CommandSender sender, String @NonNull [] args) {
-        Messenger.FILE.reload();
-        Messenger.send(sender, "reload");
+    static @NonNull String apply(@NonNull String original, @NonNull Map<String, String> replacements) {
+        String message = original;
+        for (Map.Entry<String, String> entry : replacements.entrySet())
+            message = message.replace(entry.getKey(), entry.getValue());
+
+        return message;
     }
 }
