@@ -23,4 +23,6 @@ self_graves_empty: "&dYou don't have any grave"
 self_graves: "&eHere are your IDs:"
 player_graves_empty: "&d%player doesn't have any grave"
 player_graves: "&e%player's IDs:"
+missing_id: "&2No grave id provided!"
+no_grave_found: "&7There's no grave with id: %id"
 
