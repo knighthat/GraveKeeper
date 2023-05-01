@@ -23,7 +23,9 @@ package me.knighthat.plugin;
 import me.knighthat.api.command.CommandManager;
 import me.knighthat.debugger.Debugger;
 import me.knighthat.plugin.event.EventController;
+import me.knighthat.plugin.file.MenuFile;
 import me.knighthat.plugin.file.MessageFile;
+import me.knighthat.plugin.menu.MenuManager;
 import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,6 +35,7 @@ public final class GraveKeeper extends JavaPlugin {
     {
         Debugger.LOGGER = this.getSLF4JLogger();
         Messenger.FILE = new MessageFile(this);
+        MenuManager.FILE = new MenuFile(this);
     }
 
     @Override
