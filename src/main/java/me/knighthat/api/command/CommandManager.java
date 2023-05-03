@@ -21,9 +21,7 @@
 package me.knighthat.api.command;
 
 import lombok.NonNull;
-import me.knighthat.plugin.command.ListCommand;
-import me.knighthat.plugin.command.PeakCommand;
-import me.knighthat.plugin.command.ReloadCommand;
+import me.knighthat.plugin.command.*;
 import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -39,12 +37,14 @@ import java.util.List;
 
 public class CommandManager implements TabExecutor {
 
-    private static final @NonNull List<SubCommand> SUB_COMMANDS = new LinkedList<>();
+    private static final @NonNull List<CommandTemplate> SUB_COMMANDS = new LinkedList<>();
 
     static {
         SUB_COMMANDS.add(new ReloadCommand());
         SUB_COMMANDS.add(new ListCommand());
         SUB_COMMANDS.add(new PeakCommand());
+        SUB_COMMANDS.add(new ResetCommand());
+        SUB_COMMANDS.add(new DeleteCommand());
     }
 
 
@@ -64,20 +64,17 @@ public class CommandManager implements TabExecutor {
         }
 
         String[] newArgs = removeFirst(args);
-
-        if (!sub.prerequisite(sender, newArgs))
-            return true;
-
-        sub.execute(sender, newArgs);
+        if (sub.prerequisite(sender, newArgs))
+            sub.execute(sender, newArgs);
 
         return true;
     }
 
     private @Nullable SubCommand get(@NonNull String name) {
 
-        for (SubCommand sub : SUB_COMMANDS)
+        for (CommandTemplate sub : SUB_COMMANDS)
             if (sub.getName().equalsIgnoreCase(name))
-                return sub;
+                return (SubCommand) sub;
 
         return null;
     }
@@ -91,7 +88,7 @@ public class CommandManager implements TabExecutor {
         List<String> results = new ArrayList<>();
 
         if (args.length == 1)
-            for (SubCommand sub : SUB_COMMANDS)
+            for (CommandTemplate sub : SUB_COMMANDS)
                 if (sub.getName().startsWith(args[0]))
                     results.add(sub.getName());
 

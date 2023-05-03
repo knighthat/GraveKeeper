@@ -21,45 +21,21 @@
 package me.knighthat.plugin.command;
 
 import lombok.NonNull;
-import me.knighthat.api.command.SubCommand;
+import me.knighthat.api.command.type.ReverseHybridSubCommand;
 import me.knighthat.api.persistent.DataHandler;
-import me.knighthat.plugin.grave.Grave;
-import me.knighthat.plugin.menu.MenuManager;
+import me.knighthat.plugin.instance.Grave;
 import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Map;
-
-public class PeakCommand extends SubCommand {
+public class DeleteCommand extends ReverseHybridSubCommand {
 
     @Override
-    public @NonNull String permission() {
-        return "peak";
-    }
+    public void execute(@NonNull CommandSender sender, @NonNull Player target, @NonNull Grave grave) {
+        DataHandler.remove(target, grave.getId());
+        grave.remove();
 
-    @Override
-    public boolean playerOnly() {
-        return true;
-    }
-
-    @Override
-    public boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args) {
-        if (args.length == 0)
-            Messenger.send(sender, "missing_id");
-        return args.length != 0;
-    }
-
-    @Override
-    public void execute(@NonNull CommandSender sender, String @NonNull [] args) {
-        Player player = (Player) sender;
-        Grave grave = DataHandler.get(player, args[0]);
-
-        if (!grave.isValid()) {
-            Messenger.send(sender, "no_grave_found", Map.of("%id", args[0]));
-            return;
-        }
-
-        player.openInventory(MenuManager.peak(grave));
+        String path = target == sender ? "self_delete" : "player_delete";
+        Messenger.send(sender, path, target, grave);
     }
 }

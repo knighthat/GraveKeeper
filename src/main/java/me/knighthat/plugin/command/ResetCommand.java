@@ -21,22 +21,19 @@
 package me.knighthat.plugin.command;
 
 import lombok.NonNull;
-import me.knighthat.api.command.SubCommand;
-import me.knighthat.plugin.menu.MenuManager;
+import me.knighthat.api.command.type.HybridSubCommand;
+import me.knighthat.api.persistent.DataHandler;
 import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-public class ReloadCommand extends SubCommand {
-
-    @Override
-    public @NonNull String permission() {
-        return "reload";
-    }
+public class ResetCommand extends HybridSubCommand {
 
     @Override
-    public void execute(@NonNull CommandSender sender, String @NonNull [] args) {
-        Messenger.FILE.reload();
-        MenuManager.FILE.reload();
-        Messenger.send(sender, "reload");
+    public void execute(@NonNull CommandSender sender, @NonNull Player target, String @NonNull [] args) {
+        DataHandler.reset(target);
+
+        String path = target == sender ? "self_reset" : "player_reset";
+        Messenger.send(sender, path, target);
     }
 }
