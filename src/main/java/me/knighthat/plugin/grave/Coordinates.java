@@ -23,6 +23,7 @@ package me.knighthat.plugin.grave;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -31,6 +32,9 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.UUID;
 
+@SuppressWarnings({"unused", "DuplicatedCode"})
+@ApiStatus.ScheduledForRemoval(inVersion = "0.7")
+@Deprecated
 public final class Coordinates implements Serializable {
 
     private @Nullable UUID world = null;

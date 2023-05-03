@@ -26,6 +26,7 @@ import me.knighthat.utils.Validation;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
@@ -35,6 +36,9 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.UUID;
 
+@SuppressWarnings({"unused", "DuplicatedCode"})
+@ApiStatus.ScheduledForRemoval(inVersion = "0.7")
+@Deprecated
 @Data
 public final class Grave implements Serializable {
 

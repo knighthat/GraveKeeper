@@ -26,6 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
@@ -34,6 +35,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 
+@SuppressWarnings({"unused", "DuplicatedCode"})
+@ApiStatus.ScheduledForRemoval(inVersion = "0.7")
+@Deprecated
 @Setter
 public final class Content implements Serializable {
 
