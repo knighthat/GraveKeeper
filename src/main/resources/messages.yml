@@ -25,4 +25,7 @@ player_graves_empty: "&d%player doesn't have any grave"
 player_graves: "&e%player's IDs:"
 missing_id: "&2No grave id provided!"
 no_grave_found: "&7There's no grave with id: %id"
-
+self_reset: "&2All of your graves are deleted!"
+player_reset: "&2All of %player's graves are deleted!"
+self_delete: "&7Grave %id is successfully deleted!"
+player_delete: "&7Grave %id from %player is successfully deleted!"
