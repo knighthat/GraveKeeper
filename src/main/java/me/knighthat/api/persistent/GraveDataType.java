@@ -21,7 +21,7 @@
 package me.knighthat.api.persistent;
 
 import me.knighthat.debugger.Debugger;
-import me.knighthat.plugin.grave.Grave;
+import me.knighthat.plugin.instance.Grave;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.io.BukkitObjectInputStream;
@@ -73,7 +73,7 @@ public class GraveDataType implements PersistentDataType<byte[], Grave[]> {
 
             return (Grave[]) bInStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            Debugger.err("Couln't convert Bytes to Grave Object", e.getLocalizedMessage());
+            Debugger.err("Couldn't convert Bytes to Grave Object", e.getLocalizedMessage());
             e.printStackTrace();
 
             return new Grave[0];

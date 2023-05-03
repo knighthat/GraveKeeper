@@ -22,7 +22,7 @@ package me.knighthat.api.persistent;
 
 import lombok.NonNull;
 import me.knighthat.plugin.GraveKeeper;
-import me.knighthat.plugin.grave.Grave;
+import me.knighthat.plugin.instance.Grave;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
@@ -100,7 +100,6 @@ public class DataHandler {
             grave.remove();
 
         player.getPersistentDataContainer().remove(KEY);
-        set(player, new Grave[0]);
     }
 
 }
