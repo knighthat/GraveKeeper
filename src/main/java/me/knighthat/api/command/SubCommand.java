@@ -21,12 +21,9 @@
 package me.knighthat.api.command;
 
 import lombok.NonNull;
-import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permissible;
 
 public abstract class SubCommand implements CommandTemplate {
-
-    protected final @NonNull String PERMISSION = "grave.command.";
 
     public abstract @NonNull String permission();
 
@@ -37,17 +34,8 @@ public abstract class SubCommand implements CommandTemplate {
     }
 
     @Override
-    public boolean playerOnly() {
-        return false;
-    }
-
-    @Override
-    public boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args) {
-        return true;
-    }
-
-    @Override
     public boolean hasPermission(@NonNull Permissible permissible) {
-        return permissible.hasPermission(PERMISSION.concat(permission()));
+        String permission = "grave.command.".concat(permission());
+        return permissible.hasPermission(permission);
     }
 }
