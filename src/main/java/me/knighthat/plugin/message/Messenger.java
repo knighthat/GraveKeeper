@@ -23,16 +23,16 @@ package me.knighthat.plugin.message;
 import lombok.Getter;
 import lombok.NonNull;
 import me.knighthat.api.style.Colorization;
-import me.knighthat.api.style.Converter;
 import me.knighthat.plugin.file.MessageFile;
-import org.bukkit.ChatColor;
+import me.knighthat.plugin.instance.Grave;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Messenger {
 
-    public final static @NonNull Colorization STYLE = text -> ChatColor.translateAlternateColorCodes('&', text);
     public static @NonNull MessageFile FILE;
 
     /**
@@ -42,7 +42,8 @@ public class Messenger {
      * @param message Class contains actual message
      */
     public static void send(@NonNull CommandSender to, @NonNull Message message) {
-        String styled = STYLE.color(message.text);
+        String styled = Colorization.color(message.text);
+
         to.sendMessage(styled);
     }
 
@@ -55,6 +56,7 @@ public class Messenger {
      */
     public static void send(@NonNull CommandSender to, @NonNull String path) {
         Message message = new Message(FILE.message(path));
+
         send(to, message);
     }
 
@@ -62,15 +64,63 @@ public class Messenger {
      * Queries message from MessageFile then
      * replaces all the placeholders provided
      * inside Map. Finally, creates a Message instance
-     * to send to player
+     * to send to player.
      *
      * @param to           Recipient of the message
      * @param path         Reference path from "message.yml"
      * @param replacements Pair of %place_holder%:[replacement]
      */
     public static void send(@NonNull CommandSender to, @NonNull String path, @NonNull Map<String, String> replacements) {
-        String message = FILE.message(path);
-        send(to, new Message(Converter.apply(message, replacements)));
+        String message = FILE.message(path, replacements);
+
+        send(to, new Message(message));
+    }
+
+    /**
+     * Queries message from MessageFile then
+     * replaces player's name and display name.
+     * Finally, creates a Message instance
+     * to send to player.
+     *
+     * @param to     Recipient of the message
+     * @param path   Reference path from "message.yml"
+     * @param target Whose name will be replaced
+     */
+    public static void send(@NonNull CommandSender to, @NonNull String path, @NonNull Player target) {
+        send(to, path, playerReplacements(target));
+    }
+
+    /**
+     * Queries message from MessageFile then
+     * replaces all replacements from Grave,
+     * plus, player's name and display name.
+     * Finally, creates a Message instance
+     * to send to player.
+     *
+     * @param to     Recipient of the message
+     * @param path   Reference path from "message.yml"
+     * @param target Whose name will be replaced
+     * @param grave  Grave instance
+     */
+    public static void send(@NonNull CommandSender to, @NonNull String path, @NonNull Player target, @NonNull Grave grave) {
+        Map<String, String> replacements = grave.replacements();
+        replacements.putAll(playerReplacements(target));
+
+        send(to, path, replacements);
+    }
+
+    /**
+     * Convert player instance into pairs of %name:[value]
+     *
+     * @param target Whose name will be returned
+     * @return Pair of %name:[value]
+     */
+    static @NonNull Map<String, String> playerReplacements(@NonNull Player target) {
+        Map<String, String> replacements = new HashMap<>(2);
+        replacements.put("%player", target.getName());
+        replacements.put("%player_display", target.getDisplayName());
+
+        return replacements;
     }
 
     /**
