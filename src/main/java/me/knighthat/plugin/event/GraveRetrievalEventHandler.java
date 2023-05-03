@@ -22,7 +22,7 @@ package me.knighthat.plugin.event;
 
 import lombok.NonNull;
 import me.knighthat.api.persistent.DataHandler;
-import me.knighthat.plugin.grave.Grave;
+import me.knighthat.plugin.instance.Grave;
 import me.knighthat.plugin.message.Messenger;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
@@ -30,6 +30,12 @@ import org.bukkit.entity.Player;
 
 public class GraveRetrievalEventHandler {
 
+    /**
+     * Removes "Grave", NBT data from player
+     *
+     * @param who     Person interacted with "grave"
+     * @param clicked Block got interacted
+     */
     public static void process(@NonNull Player who, @NonNull Block clicked) {
         String id = DataHandler.pull((TileState) clicked.getState());
         Grave grave = DataHandler.get(who, id);
@@ -39,16 +45,8 @@ public class GraveRetrievalEventHandler {
             grave.getContent().giveTo(who);
             grave.remove();
 
-            retrieveMessage(who);
+            Messenger.send(who, "retrieve");
         } else
-            notOwnerMessage(who);
-    }
-
-    private static void notOwnerMessage(@NonNull Player receiver) {
-        Messenger.send(receiver, "not_owner");
-    }
-
-    private static void retrieveMessage(@NonNull Player receiver) {
-        Messenger.send(receiver, "retrieve");
+            Messenger.send(who, "not_owner");
     }
 }
