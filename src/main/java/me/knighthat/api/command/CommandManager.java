@@ -37,7 +37,7 @@ import java.util.List;
 
 public class CommandManager implements TabExecutor {
 
-    private static final @NonNull List<CommandTemplate> SUB_COMMANDS = new LinkedList<>();
+    private static final @NonNull List<SubCommand> SUB_COMMANDS = new LinkedList<>();
 
     static {
         SUB_COMMANDS.add(new ReloadCommand());
@@ -72,9 +72,9 @@ public class CommandManager implements TabExecutor {
 
     private @Nullable SubCommand get(@NonNull String name) {
 
-        for (CommandTemplate sub : SUB_COMMANDS)
+        for (SubCommand sub : SUB_COMMANDS)
             if (sub.getName().equalsIgnoreCase(name))
-                return (SubCommand) sub;
+                return sub;
 
         return null;
     }
@@ -88,7 +88,7 @@ public class CommandManager implements TabExecutor {
         List<String> results = new ArrayList<>();
 
         if (args.length == 1)
-            for (CommandTemplate sub : SUB_COMMANDS)
+            for (SubCommand sub : SUB_COMMANDS)
                 if (sub.getName().startsWith(args[0]))
                     results.add(sub.getName());
 
