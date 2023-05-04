@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 
 /**
@@ -50,33 +51,38 @@ public class GraveDataType implements PersistentDataType<byte[], Grave[]> {
 
     @Override
     public byte @NotNull [] toPrimitive(Grave @NotNull [] graves, @NotNull PersistentDataAdapterContext persistentDataAdapterContext) {
-        try {
-            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-            BukkitObjectOutputStream bOutStream = new BukkitObjectOutputStream(outStream);
-            bOutStream.writeObject(graves);
-            bOutStream.flush();
+        return CompletableFuture.supplyAsync(() -> {
+            try (
+                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                    BukkitObjectOutputStream bOutStream = new BukkitObjectOutputStream(outStream)
+            ) {
+                bOutStream.writeObject(graves);
+                bOutStream.flush();
 
-            return outStream.toByteArray();
-        } catch (IOException e) {
-            Debugger.err("Couldn't convert Grave Object to Bytes", e.getLocalizedMessage());
-            e.printStackTrace();
+                return outStream.toByteArray();
+            } catch (IOException e) {
+                Debugger.err("Couldn't convert Grave Object to Bytes", e.getLocalizedMessage());
+                e.printStackTrace();
 
-            return new byte[0];
-        }
+                return new byte[0];
+            }
+        }).join();
     }
 
     @Override
     public Grave @NotNull [] fromPrimitive(byte @NotNull [] bytes, @NotNull PersistentDataAdapterContext persistentDataAdapterContext) {
-        try {
-            ByteArrayInputStream inStream = new ByteArrayInputStream(bytes);
-            BukkitObjectInputStream bInStream = new BukkitObjectInputStream(inStream);
+        return CompletableFuture.supplyAsync(() -> {
+            try (
+                    ByteArrayInputStream inStream = new ByteArrayInputStream(bytes);
+                    BukkitObjectInputStream bInStream = new BukkitObjectInputStream(inStream)
+            ) {
+                return (Grave[]) bInStream.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                Debugger.err("Couldn't convert Bytes to Grave Object", e.getLocalizedMessage());
+                e.printStackTrace();
 
-            return (Grave[]) bInStream.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            Debugger.err("Couldn't convert Bytes to Grave Object", e.getLocalizedMessage());
-            e.printStackTrace();
-
-            return new Grave[0];
-        }
+                return new Grave[0];
+            }
+        }).join();
     }
 }
