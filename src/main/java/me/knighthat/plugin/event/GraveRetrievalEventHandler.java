@@ -45,7 +45,7 @@ public class GraveRetrievalEventHandler {
             grave.getContent().giveTo(who);
             grave.remove();
 
-            Messenger.send(who, "retrieve");
+            Messenger.send(who, "retrieve", grave.replacements());
         } else
             Messenger.send(who, "not_owner");
     }
