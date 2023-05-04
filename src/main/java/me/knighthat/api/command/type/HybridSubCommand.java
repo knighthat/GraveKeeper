@@ -22,7 +22,6 @@ package me.knighthat.api.command.type;
 
 import lombok.NonNull;
 import me.knighthat.api.command.SubCommand;
-import me.knighthat.api.command.permission.MultiPermissionsCommand;
 import me.knighthat.plugin.message.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -31,7 +30,7 @@ import org.bukkit.permissions.Permissible;
 
 import java.util.Map;
 
-public abstract class HybridSubCommand extends SubCommand implements MultiPermissionsCommand {
+public abstract class HybridSubCommand extends SubCommand {
 
     @Override
     public boolean playerOnly() {
@@ -77,12 +76,10 @@ public abstract class HybridSubCommand extends SubCommand implements MultiPermis
         return true;
     }
 
-    @Override
     public @NonNull String selfPermission() {
         return "grave.command." + getName() + ".self";
     }
 
-    @Override
     public @NonNull String playerPermission() {
         return "grave.command." + getName() + ".players";
     }
