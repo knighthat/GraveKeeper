@@ -21,20 +21,16 @@
 package me.knighthat.plugin.event;
 
 import lombok.NonNull;
-import me.knighthat.api.menu.PluginMenu;
+import me.knighthat.api.menu.InteractableMenu;
 import me.knighthat.api.persistent.DataHandler;
 import me.knighthat.plugin.instance.Grave;
-import me.knighthat.plugin.message.Messenger;
 import me.knighthat.utils.Validation;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -66,38 +62,21 @@ public class EventController implements Listener {
     public void playerInteractWithGrave(PlayerInteractEvent event) {
         Block block = event.getClickedBlock();
 
-        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && Validation.isGrave(block)) {
-            event.setCancelled(true);
-            GraveRetrievalEventHandler.process(event.getPlayer(), block);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void playerBreaksGrave(BlockBreakEvent event) {
-        Player player = event.getPlayer();
-        Block block = event.getBlock();
-
         if (!Validation.isGrave(block))
             return;
 
-        event.setCancelled(true);
-
-        String id = DataHandler.pull((TileState) block.getState());
-        Grave[] graveArr = DataHandler.pull(player);
-
-        for (Grave grave : graveArr)
-            if (grave.getId().equals(id) && grave.isValid()) {
+        switch (event.getAction()) {
+            case RIGHT_CLICK_BLOCK, LEFT_CLICK_BLOCK -> {
+                event.setCancelled(true);
                 GraveRetrievalEventHandler.process(event.getPlayer(), block);
-                return;
             }
-
-        Messenger.send(player, "not_owner");
+        }
     }
 
     @EventHandler
     public void playerClicksInventory(InventoryClickEvent event) {
         Inventory inventory = event.getView().getTopInventory();
-        if (inventory.getHolder() instanceof PluginMenu menu)
+        if (inventory.getHolder() instanceof InteractableMenu menu)
             menu.onClick(event);
     }
 
