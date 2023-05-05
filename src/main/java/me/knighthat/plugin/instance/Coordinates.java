@@ -18,24 +18,24 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin.grave;
+package me.knighthat.plugin.instance;
 
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nullable;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 import java.util.UUID;
 
-@SuppressWarnings({"unused", "DuplicatedCode"})
-@ApiStatus.ScheduledForRemoval(inVersion = "0.7")
-@Deprecated
 public final class Coordinates implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1485169032725408696L;
 
     private @Nullable UUID world = null;
     private int x = 0;

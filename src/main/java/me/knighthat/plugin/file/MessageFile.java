@@ -24,6 +24,9 @@ import lombok.NonNull;
 import me.knighthat.api.file.PluginFile;
 import me.knighthat.plugin.GraveKeeper;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MessageFile extends PluginFile {
 
     public MessageFile(@NonNull GraveKeeper plugin) {
@@ -34,7 +37,12 @@ public class MessageFile extends PluginFile {
         return super.string("prefix");
     }
 
+    public @NonNull String message(@NonNull String path, @NonNull Map<String, String> replacements) {
+        String message = super.string(path, replacements);
+        return prefix().concat(message);
+    }
+
     public @NonNull String message(@NonNull String path) {
-        return prefix().concat(super.string(path));
+        return this.message(path, new HashMap<>(0));
     }
 }

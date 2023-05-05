@@ -18,7 +18,7 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin.grave;
+package me.knighthat.plugin.instance;
 
 import lombok.NonNull;
 import lombok.Setter;
@@ -26,20 +26,21 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
+import java.io.Serial;
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 
-@SuppressWarnings({"unused", "DuplicatedCode"})
-@ApiStatus.ScheduledForRemoval(inVersion = "0.7")
-@Deprecated
 @Setter
 public final class Content implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 5497077563272859582L;
 
     private @NonNull Map<Integer, ItemStack> items = new HashMap<>(0);
     private @Range(from = 0, to = Integer.MAX_VALUE) int experience = 0;
@@ -77,6 +78,29 @@ public final class Content implements Serializable {
                 recipient.getWorld().dropItem(recipient.getLocation(), i);
         });
         recipient.giveExp(this.experience);
+    }
+
+    /**
+     * Creates a pair for replacing placeholders
+     *
+     * @return Pair of %place_holder:[replacement]
+     */
+    public @NonNull Map<String, String> replacements() {
+        StringJoiner joiner = new StringJoiner(",", "[", "]");
+        this.items.forEach((s, i) -> {
+            int amount = i.getAmount();
+            String name = i.getType().name().toLowerCase();
+
+            if (i.getItemMeta().hasDisplayName())
+                name = i.getItemMeta().getDisplayName();
+
+            joiner.add(MessageFormat.format("{0}x{1}", amount, name));
+        });
+
+        return Map.of(
+                "%material", joiner.toString(),
+                "%exp", String.valueOf(this.experience)
+        );
     }
 
     /**

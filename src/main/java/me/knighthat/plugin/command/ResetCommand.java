@@ -18,21 +18,22 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.command;
+package me.knighthat.plugin.command;
 
 import lombok.NonNull;
+import me.knighthat.api.command.type.HybridSubCommand;
+import me.knighthat.api.persistent.DataHandler;
+import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.CommandSender;
-import org.bukkit.permissions.Permissible;
+import org.bukkit.entity.Player;
 
-interface CommandTemplate {
+public class ResetCommand extends HybridSubCommand {
 
-    @NonNull String getName();
+    @Override
+    public void execute(@NonNull CommandSender sender, @NonNull Player target, String @NonNull [] args) {
+        DataHandler.reset(target);
 
-    boolean playerOnly();
-
-    boolean hasPermission(@NonNull Permissible permissible);
-
-    boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args);
-
-    void execute(@NonNull CommandSender sender, String @NonNull [] args);
+        String path = target == sender ? "self_reset" : "player_reset";
+        Messenger.send(sender, path, target);
+    }
 }

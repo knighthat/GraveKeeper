@@ -21,75 +21,30 @@
 package me.knighthat.plugin.command;
 
 import lombok.NonNull;
-import me.knighthat.api.command.SubCommand;
+import me.knighthat.api.command.type.HybridSubCommand;
 import me.knighthat.api.persistent.DataHandler;
-import me.knighthat.plugin.grave.Grave;
+import me.knighthat.plugin.instance.Grave;
 import me.knighthat.plugin.message.Messenger;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permissible;
 
-import java.util.Map;
 import java.util.StringJoiner;
 
-public class ListCommand extends SubCommand {
-
-
-    @Override
-    public @NonNull String permission() {
-        return "";
-    }
+public class ListCommand extends HybridSubCommand {
 
     @Override
-    public boolean hasPermission(@NonNull Permissible permissible) {
-        return true;
-    }
-
-    @Override
-    public boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args) {
-        String selfPerm = PERMISSION.concat("list.self");
-        String allPerm = PERMISSION.concat("list.player");
-
-        if (args.length == 0 || args[0].equals(sender.getName())) {
-            if (!(sender instanceof Player)) {
-                Messenger.send(sender, "cmd_requires_player");
-                return false;
-            } else if (!sender.hasPermission(selfPerm)) {
-                Messenger.send(sender, "no_cmd_perm");
-                return false;
-            }
-            return true;
-        }
-
-        Player player = Bukkit.getPlayer(args[0]);
-        if (player == null || !player.isOnline()) {
-            Messenger.send(sender, "player_not_found", Map.of("%player", args[0]));
-            return false;
-        }
-
-        if (!sender.hasPermission(allPerm)) {
-            Messenger.send(sender, "no_cmd_perm");
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public void execute(@NonNull CommandSender sender, String @NonNull [] args) {
-        boolean isSelf = args.length == 0;
-        Player target = isSelf ? (Player) sender : Bukkit.getPlayer(args[0]);
-        assert target != null;
+    public void execute(@NonNull CommandSender sender, @NonNull Player target, String @NonNull [] args) {
+        boolean isSelf = target == sender;
 
         String idList = graveArrayToString(DataHandler.pull(target));
         if (idList.isEmpty()) {
-            Messenger.send(sender, isSelf ? "self_graves_empty" : "player_graves_empty");
+            String path = isSelf ? "self_graves_empty" : "player_graves_empty";
+            Messenger.send(sender, path, target);
             return;
         }
 
-        Map<String, String> replacements = Map.of("%player", target.getName());
-        Messenger.send(sender, isSelf ? "self_graves" : "player_graves", replacements);
+        String path = isSelf ? "self_graves" : "player_graves";
+        Messenger.send(sender, path, target);
         Messenger.send(sender, new Messenger.Message(idList));
     }
 

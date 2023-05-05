@@ -24,30 +24,23 @@ import lombok.NonNull;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permissible;
 
-public abstract class SubCommand implements CommandTemplate {
-
-    protected final @NonNull String PERMISSION = "grave.command.";
+public abstract class SubCommand {
 
     public abstract @NonNull String permission();
 
-    @Override
+    public abstract boolean playerOnly();
+
+    public abstract boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args);
+
+    public abstract void execute(@NonNull CommandSender sender, String @NonNull [] args);
+
     public @NonNull String getName() {
         String className = getClass().getSimpleName().toLowerCase();
         return className.replace("command", "");
     }
 
-    @Override
-    public boolean playerOnly() {
-        return false;
-    }
-
-    @Override
-    public boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args) {
-        return true;
-    }
-
-    @Override
     public boolean hasPermission(@NonNull Permissible permissible) {
-        return permissible.hasPermission(PERMISSION.concat(permission()));
+        String permission = "grave.command.".concat(permission());
+        return permissible.hasPermission(permission);
     }
 }

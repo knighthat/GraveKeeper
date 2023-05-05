@@ -22,7 +22,7 @@ package me.knighthat.plugin.event;
 
 import lombok.NonNull;
 import me.knighthat.api.persistent.DataHandler;
-import me.knighthat.plugin.grave.Grave;
+import me.knighthat.plugin.instance.Grave;
 import me.knighthat.plugin.message.Messenger;
 import me.knighthat.utils.ExpCalc;
 import org.bukkit.Location;

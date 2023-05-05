@@ -18,23 +18,27 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.persistent;
+package me.knighthat.api.deprecated.persistent;
 
 import lombok.NonNull;
 import me.knighthat.plugin.GraveKeeper;
-import me.knighthat.plugin.instance.Grave;
+import me.knighthat.plugin.grave.Grave;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings({"unused", "DuplicatedCode"})
+@ApiStatus.ScheduledForRemoval(inVersion = "0.7")
+@Deprecated
 public class DataHandler {
 
     private static final @NonNull GraveKeeper PLUGIN = JavaPlugin.getPlugin(GraveKeeper.class);
@@ -100,6 +104,7 @@ public class DataHandler {
             grave.remove();
 
         player.getPersistentDataContainer().remove(KEY);
+        set(player, new Grave[0]);
     }
 
 }

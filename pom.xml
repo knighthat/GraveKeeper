@@ -6,7 +6,7 @@
 
     <groupId>me.knighthat</groupId>
     <artifactId>plugin</artifactId>
-    <version>0.4</version>
+    <version>0.5.1</version>
     <packaging>jar</packaging>
 
     <name>GraveKeeper</name>
@@ -41,6 +41,13 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>${basedir}</directory>
+                <includes>
+                    <include>README.md</include>
+                    <include>LICENSE.md</include>
+                </includes>
             </resource>
         </resources>
     </build>

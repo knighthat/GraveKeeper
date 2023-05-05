@@ -18,31 +18,30 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin.grave;
+package me.knighthat.plugin.instance;
 
 import lombok.Data;
 import lombok.NonNull;
 import me.knighthat.utils.Validation;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Map;
-import java.util.StringJoiner;
-import java.util.UUID;
+import java.util.*;
 
-@SuppressWarnings({"unused", "DuplicatedCode"})
-@ApiStatus.ScheduledForRemoval(inVersion = "0.7")
-@Deprecated
 @Data
 public final class Grave implements Serializable {
 
-    private final @NonNull String id = genId();
+    @Serial
+    private static final long serialVersionUID = 1485169032725408696L;
+
+    private final @NonNull String id;
     private final @Nullable UUID owner;
     private final @NonNull Coordinates coordinates = new Coordinates();
     private final @NonNull Content content = new Content();
@@ -50,11 +49,44 @@ public final class Grave implements Serializable {
 
     private @NonNull Material material = Material.CHEST;
 
+    public Grave(@Nullable String id,
+                 @Nullable UUID owner,
+                 @Nullable Location location,
+                 @Nullable Map<Integer, ItemStack> content,
+                 @Range(from = 0, to = Integer.MAX_VALUE) int experience) {
+
+        if (id == null) {
+            String uuid = UUID.randomUUID().toString();
+            uuid = uuid.substring(uuid.lastIndexOf("-") + 1);
+            this.id = uuid;
+        } else {
+            this.id = id;
+        }
+
+        this.owner = owner == null ? UUID.randomUUID() : owner;
+
+        if (location != null)
+            this.coordinates.setLocation(location);
+
+        if (content != null)
+            this.content.setItems(content);
+
+        this.content.setExperience(experience);
+    }
+
     /**
      * Creates an invalid Grave instance
      */
     public Grave() {
-        this.owner = UUID.randomUUID();
+        this(null, null, null, null, 0);
+    }
+
+    public Grave(@NonNull me.knighthat.plugin.grave.Grave oldGrave) {
+        this(oldGrave.getId(),
+                oldGrave.getOwner(),
+                oldGrave.getCoordinates().get(),
+                oldGrave.getContent().items(),
+                oldGrave.getContent().experience());
     }
 
     /**
@@ -69,21 +101,7 @@ public final class Grave implements Serializable {
                  @NonNull Location location,
                  @NonNull Map<Integer, ItemStack> content,
                  @Range(from = 0, to = Integer.MAX_VALUE) int experience) {
-        this.owner = owner;
-        this.coordinates.setLocation(location);
-        this.content.setItems(content);
-        this.content.setExperience(experience);
-    }
-
-    /**
-     * Converts randomized java.util.UUID's last 12 characters
-     * into String and use it as unique identity for grave
-     *
-     * @return 12 characters [a-fA-f0-9]
-     */
-    @NonNull String genId() {
-        String uuid = UUID.randomUUID().toString();
-        return uuid.substring(uuid.lastIndexOf("-") + 1);
+        this(null, owner, location, content, experience);
     }
 
     /**
@@ -116,6 +134,31 @@ public final class Grave implements Serializable {
     public void remove() {
         if (this.isValid())
             this.coordinates.get().getBlock().setType(Material.AIR);
+    }
+
+    /**
+     * Creates a pair for replacing placeholders.<br>
+     * If "grave" is not valid, return empty map
+     *
+     * @return Pair of %place_holder:[replacement]
+     */
+    public @NonNull Map<String, String> replacements() {
+        Map<String, String> placeholders = new HashMap<>(0);
+
+        placeholders.put("%id", this.id);
+        placeholders.put("%owner", this.owner.toString());
+
+        Player player = Bukkit.getPlayer(owner);
+        if (player != null && player.isOnline()) {
+            placeholders.put("%player", player.getName());
+            placeholders.put("%player_display", player.getDisplayName());
+        }
+
+        placeholders.put("%date", this.date.toString());
+        placeholders.putAll(this.content.replacements());
+        placeholders.putAll(this.coordinates.replacements());
+
+        return placeholders;
     }
 
     /**

@@ -21,9 +21,18 @@
 package me.knighthat.api.style;
 
 import lombok.NonNull;
+import org.bukkit.ChatColor;
 
-@FunctionalInterface
 public interface Colorization {
 
-    @NonNull String color(@NonNull String text);
+    /**
+     * Using org.bukkit.ChatColor to replace all '&' characters
+     * with '§' characters to create colors.
+     *
+     * @param text String to be converted
+     * @return new string with color(s)
+     */
+    static @NonNull String color(@NonNull String text) {
+        return ChatColor.translateAlternateColorCodes('&', text);
+    }
 }

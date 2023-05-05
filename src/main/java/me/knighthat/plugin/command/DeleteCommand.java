@@ -18,19 +18,24 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.style;
+package me.knighthat.plugin.command;
 
 import lombok.NonNull;
+import me.knighthat.api.command.type.ReverseHybridSubCommand;
+import me.knighthat.api.persistent.DataHandler;
+import me.knighthat.plugin.instance.Grave;
+import me.knighthat.plugin.message.Messenger;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-import java.util.Map;
+public class DeleteCommand extends ReverseHybridSubCommand {
 
-public interface Converter {
+    @Override
+    public void execute(@NonNull CommandSender sender, @NonNull Player target, @NonNull Grave grave) {
+        DataHandler.remove(target, grave.getId());
+        grave.remove();
 
-    static @NonNull String apply(@NonNull String original, @NonNull Map<String, String> replacements) {
-        String message = original;
-        for (Map.Entry<String, String> entry : replacements.entrySet())
-            message = message.replace(entry.getKey(), entry.getValue());
-
-        return message;
+        String path = target == sender ? "self_delete" : "player_delete";
+        Messenger.send(sender, path, target, grave);
     }
 }

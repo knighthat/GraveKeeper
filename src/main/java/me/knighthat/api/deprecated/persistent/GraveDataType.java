@@ -18,25 +18,24 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.persistent;
+package me.knighthat.api.deprecated.persistent;
 
 import me.knighthat.debugger.Debugger;
-import me.knighthat.plugin.instance.Grave;
+import me.knighthat.plugin.grave.Grave;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
 
-
-/**
- * Allows server to write and read "Grave Object" as bytes from NBT
- */
+@SuppressWarnings({"unused", "DuplicatedCode"})
+@ApiStatus.ScheduledForRemoval(inVersion = "0.7")
+@Deprecated
 public class GraveDataType implements PersistentDataType<byte[], Grave[]> {
 
     @Override
@@ -51,38 +50,33 @@ public class GraveDataType implements PersistentDataType<byte[], Grave[]> {
 
     @Override
     public byte @NotNull [] toPrimitive(Grave @NotNull [] graves, @NotNull PersistentDataAdapterContext persistentDataAdapterContext) {
-        return CompletableFuture.supplyAsync(() -> {
-            try (
-                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-                    BukkitObjectOutputStream bOutStream = new BukkitObjectOutputStream(outStream)
-            ) {
-                bOutStream.writeObject(graves);
-                bOutStream.flush();
+        try {
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            BukkitObjectOutputStream bOutStream = new BukkitObjectOutputStream(outStream);
+            bOutStream.writeObject(graves);
+            bOutStream.flush();
 
-                return outStream.toByteArray();
-            } catch (IOException e) {
-                Debugger.err("Couldn't convert Grave Object to Bytes", e.getLocalizedMessage());
-                e.printStackTrace();
+            return outStream.toByteArray();
+        } catch (IOException e) {
+            Debugger.err("Couldn't convert Grave Object to Bytes", e.getLocalizedMessage());
+            e.printStackTrace();
 
-                return new byte[0];
-            }
-        }).join();
+            return new byte[0];
+        }
     }
 
     @Override
     public Grave @NotNull [] fromPrimitive(byte @NotNull [] bytes, @NotNull PersistentDataAdapterContext persistentDataAdapterContext) {
-        return CompletableFuture.supplyAsync(() -> {
-            try (
-                    ByteArrayInputStream inStream = new ByteArrayInputStream(bytes);
-                    BukkitObjectInputStream bInStream = new BukkitObjectInputStream(inStream)
-            ) {
-                return (Grave[]) bInStream.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                Debugger.err("Couldn't convert Bytes to Grave Object", e.getLocalizedMessage());
-                e.printStackTrace();
+        try {
+            ByteArrayInputStream inStream = new ByteArrayInputStream(bytes);
+            BukkitObjectInputStream bInStream = new BukkitObjectInputStream(inStream);
 
-                return new Grave[0];
-            }
-        }).join();
+            return (Grave[]) bInStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            Debugger.err("Couldn't convert Bytes to Grave Object", e.getLocalizedMessage());
+            e.printStackTrace();
+
+            return new Grave[0];
+        }
     }
 }

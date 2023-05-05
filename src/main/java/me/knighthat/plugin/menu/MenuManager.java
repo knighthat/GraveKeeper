@@ -22,15 +22,11 @@ package me.knighthat.plugin.menu;
 
 import lombok.NonNull;
 import me.knighthat.api.menu.PluginMenu;
-import me.knighthat.api.style.Converter;
+import me.knighthat.api.style.Colorization;
 import me.knighthat.plugin.file.MenuFile;
-import me.knighthat.plugin.grave.Grave;
-import me.knighthat.plugin.message.Messenger;
-import me.knighthat.utils.GraveData;
+import me.knighthat.plugin.instance.Grave;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Map;
 
 public class MenuManager {
 
@@ -40,10 +36,8 @@ public class MenuManager {
 
     public static @NonNull Inventory peak(@NonNull Grave grave) {
 
-        String title = FILE.string(PEAK.concat("title"));
-        title = Converter.apply(title, GraveData.replacements(grave, GraveData.DataType.ALL));
-
-        PluginMenu menu = new PluginMenu(Messenger.STYLE.color(title), 54) {
+        String title = FILE.string(PEAK.concat("title"), grave);
+        PluginMenu menu = new PluginMenu(Colorization.color(title), 54) {
         };
         menu.setContent(grave.getContent().items());
 
@@ -54,14 +48,10 @@ public class MenuManager {
     }
 
     private static @NonNull ItemStack expBottle(@NonNull Grave grave) {
-        String exp_name = FILE.string(PEAK.concat("exp.name"));
-        Map<String, String> replacements = GraveData.replacements(grave, GraveData.DataType.CONTENT);
-        String name = Converter.apply(exp_name, replacements);
+        String exp_name = FILE.string(PEAK.concat("exp.name"), grave.getContent().replacements());
 
         ItemStack exp_bottle = new ItemStack(FILE.material(PEAK.concat("exp.material")));
-        exp_bottle.editMeta(meta -> meta.setDisplayName(
-                Converter.apply(Messenger.STYLE.color(name), grave.getCoordinates().replacements())
-        ));
+        exp_bottle.editMeta(meta -> meta.setDisplayName(Colorization.color(exp_name)));
 
         return exp_bottle;
     }

@@ -18,35 +18,13 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin.event;
+package me.knighthat.api.command.type;
 
-import lombok.NonNull;
-import me.knighthat.api.persistent.DataHandler;
-import me.knighthat.plugin.instance.Grave;
-import me.knighthat.plugin.message.Messenger;
-import org.bukkit.block.Block;
-import org.bukkit.block.TileState;
-import org.bukkit.entity.Player;
+import me.knighthat.api.command.SubCommand;
 
-public class GraveRetrievalEventHandler {
-
-    /**
-     * Removes "Grave", NBT data from player
-     *
-     * @param who     Person interacted with "grave"
-     * @param clicked Block got interacted
-     */
-    public static void process(@NonNull Player who, @NonNull Block clicked) {
-        String id = DataHandler.pull((TileState) clicked.getState());
-        Grave grave = DataHandler.get(who, id);
-
-        if (grave.isValid()) {
-            DataHandler.remove(who, id);
-            grave.getContent().giveTo(who);
-            grave.remove();
-
-            Messenger.send(who, "retrieve", grave.replacements());
-        } else
-            Messenger.send(who, "not_owner");
+public abstract class OpenSubCommand extends SubCommand {
+    @Override
+    public boolean playerOnly() {
+        return false;
     }
 }
