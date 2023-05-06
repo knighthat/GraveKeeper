@@ -45,6 +45,7 @@ public class CommandManager implements TabExecutor {
         SUB_COMMANDS.add(new PeakCommand());
         SUB_COMMANDS.add(new ResetCommand());
         SUB_COMMANDS.add(new DeleteCommand());
+        SUB_COMMANDS.add(new TeleportCommand());
     }
 
 

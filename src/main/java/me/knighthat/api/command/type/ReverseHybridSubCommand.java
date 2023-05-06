@@ -73,10 +73,10 @@ public abstract class ReverseHybridSubCommand extends HybridSubCommand {
 
         Grave grave = DataHandler.get(target, args[0]);
         if (!grave.isValid()) {
-            Messenger.send(sender, "no_grave_found", Map.of("%id", args[0]));
+            Messenger.send(sender, "grave_not_found", Map.of("%id", args[0]));
             return;
         }
-        
+
         execute(sender, target, grave);
     }
 
