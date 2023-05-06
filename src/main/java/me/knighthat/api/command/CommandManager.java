@@ -21,6 +21,7 @@
 package me.knighthat.api.command;
 
 import lombok.NonNull;
+import me.knighthat.api.command.conditions.PlayerCommand;
 import me.knighthat.plugin.command.*;
 import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.Command;
@@ -56,8 +57,10 @@ public class CommandManager implements TabExecutor {
         SubCommand sub = get(args[0]);
         if (sub == null) return true;
 
-        if (sub.playerOnly() && !(sender instanceof Player))
+        if (sub instanceof PlayerCommand && !(sender instanceof Player)) {
+            Messenger.send(sender, "cmd_requires_player");
             return true;
+        }
 
         if (!sub.hasPermission(sender)) {
             Messenger.send(sender, "no_cmd_perm");

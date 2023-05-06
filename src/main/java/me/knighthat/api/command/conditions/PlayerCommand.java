@@ -18,13 +18,7 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.command.type;
+package me.knighthat.api.command.conditions;
 
-import me.knighthat.api.command.SubCommand;
-
-public abstract class OpenSubCommand extends SubCommand {
-    @Override
-    public boolean playerOnly() {
-        return false;
-    }
+public interface PlayerCommand {
 }

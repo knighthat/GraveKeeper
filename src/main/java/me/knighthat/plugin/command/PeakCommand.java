@@ -21,24 +21,14 @@
 package me.knighthat.plugin.command;
 
 import lombok.NonNull;
+import me.knighthat.api.command.conditions.PlayerCommand;
 import me.knighthat.api.command.type.ReverseHybridSubCommand;
 import me.knighthat.plugin.instance.Grave;
 import me.knighthat.plugin.menu.MenuManager;
-import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class PeakCommand extends ReverseHybridSubCommand {
-
-    @Override
-    public boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args) {
-        if (!(sender instanceof Player)) {
-            Messenger.send(sender, "cmd_requires_player");
-            return false;
-        }
-
-        return super.prerequisite(sender, args);
-    }
+public class PeakCommand extends ReverseHybridSubCommand implements PlayerCommand {
 
     @Override
     public void execute(@NonNull CommandSender sender, @NonNull Player target, @NonNull Grave grave) {

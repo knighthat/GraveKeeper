@@ -21,12 +21,13 @@
 package me.knighthat.plugin.command;
 
 import lombok.NonNull;
-import me.knighthat.api.command.type.OpenSubCommand;
+import me.knighthat.api.command.SubCommand;
+import me.knighthat.api.command.conditions.PlayerCommand;
 import me.knighthat.plugin.menu.MenuManager;
 import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.CommandSender;
 
-public class ReloadCommand extends OpenSubCommand {
+public class ReloadCommand extends SubCommand implements PlayerCommand {
 
     @Override
     public @NonNull String permission() {

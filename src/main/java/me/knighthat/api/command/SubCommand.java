@@ -28,8 +28,6 @@ public abstract class SubCommand {
 
     public abstract @NonNull String permission();
 
-    public abstract boolean playerOnly();
-
     public abstract boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args);
 
     public abstract void execute(@NonNull CommandSender sender, String @NonNull [] args);

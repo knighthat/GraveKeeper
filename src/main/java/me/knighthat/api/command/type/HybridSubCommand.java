@@ -32,11 +32,6 @@ import java.util.Map;
 
 public abstract class HybridSubCommand extends SubCommand {
 
-    @Override
-    public boolean playerOnly() {
-        return false;
-    }
-
     @Deprecated
     @Override
     public @NonNull String permission() {
