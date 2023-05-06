@@ -21,6 +21,7 @@
 package me.knighthat.api.command;
 
 import lombok.NonNull;
+import me.knighthat.api.command.conditions.OfferTabComplete;
 import me.knighthat.api.command.conditions.PlayerCommand;
 import me.knighthat.plugin.command.*;
 import me.knighthat.plugin.message.Messenger;
@@ -91,11 +92,26 @@ public class CommandManager implements TabExecutor {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String start, @NotNull String[] args) {
         List<String> results = new ArrayList<>();
 
-        if (args.length == 1)
-            for (SubCommand sub : SUB_COMMANDS)
-                if (sub.getName().startsWith(args[0]))
-                    results.add(sub.getName());
+        if (args.length == 1) {
 
-        return results;
+            for (SubCommand sub : SUB_COMMANDS)
+                results.add(sub.getName());
+
+        } else {
+
+            SubCommand sub = get(args[0]);
+            if (sub instanceof PlayerCommand && !(sender instanceof Player))
+                return results;
+
+            if (sub instanceof OfferTabComplete instance)
+                results.addAll(instance.onTabComplete(sender, args));
+
+        }
+
+        return results
+                .stream()
+                .filter(a -> a.startsWith(args[args.length - 1]))
+                .sorted()
+                .toList();
     }
 }

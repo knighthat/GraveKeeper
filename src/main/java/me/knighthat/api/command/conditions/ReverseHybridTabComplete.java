@@ -18,22 +18,40 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin.command;
+package me.knighthat.api.command.conditions;
 
 import lombok.NonNull;
-import me.knighthat.api.command.conditions.PlayerCommand;
-import me.knighthat.api.command.conditions.ReverseHybridTabComplete;
-import me.knighthat.api.command.type.ReverseHybridSubCommand;
+import me.knighthat.api.persistent.DataHandler;
 import me.knighthat.plugin.instance.Grave;
-import me.knighthat.plugin.menu.MenuManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class PeakCommand extends ReverseHybridSubCommand implements PlayerCommand, ReverseHybridTabComplete {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public interface ReverseHybridTabComplete extends OfferTabComplete {
 
     @Override
-    public void execute(@NonNull CommandSender sender, @NonNull Player target, @NonNull Grave grave) {
-        Player player = (Player) sender;
-        player.openInventory(MenuManager.peak(grave));
+    @NonNull
+    default List<String> onTabComplete(@NonNull CommandSender sender, String @NonNull [] args) {
+        List<String> results = new ArrayList<>();
+
+        switch (args.length) {
+            case 2 -> {
+                if (!(sender instanceof Player player))
+                    break;
+
+                Grave[] graves = DataHandler.pull(player);
+                results.addAll(Arrays.stream(graves).map(Grave::getId).toList());
+            }
+            case 3 -> {
+                for (Player player : Bukkit.getOnlinePlayers())
+                    results.add(player.getName());
+            }
+        }
+
+        return results;
     }
 }

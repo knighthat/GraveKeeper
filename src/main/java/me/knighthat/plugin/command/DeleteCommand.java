@@ -21,6 +21,7 @@
 package me.knighthat.plugin.command;
 
 import lombok.NonNull;
+import me.knighthat.api.command.conditions.ReverseHybridTabComplete;
 import me.knighthat.api.command.type.ReverseHybridSubCommand;
 import me.knighthat.api.persistent.DataHandler;
 import me.knighthat.plugin.instance.Grave;
@@ -28,7 +29,7 @@ import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class DeleteCommand extends ReverseHybridSubCommand {
+public class DeleteCommand extends ReverseHybridSubCommand implements ReverseHybridTabComplete {
 
     @Override
     public void execute(@NonNull CommandSender sender, @NonNull Player target, @NonNull Grave grave) {

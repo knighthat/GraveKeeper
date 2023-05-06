@@ -21,13 +21,18 @@
 package me.knighthat.plugin.command;
 
 import lombok.NonNull;
+import me.knighthat.api.command.conditions.OfferTabComplete;
 import me.knighthat.api.command.type.HybridSubCommand;
 import me.knighthat.api.persistent.DataHandler;
 import me.knighthat.plugin.message.Messenger;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class ResetCommand extends HybridSubCommand {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ResetCommand extends HybridSubCommand implements OfferTabComplete {
 
     @Override
     public void execute(@NonNull CommandSender sender, @NonNull Player target, String @NonNull [] args) {
@@ -35,5 +40,16 @@ public class ResetCommand extends HybridSubCommand {
 
         String path = target == sender ? "self_reset" : "player_reset";
         Messenger.send(sender, path, target);
+    }
+
+    @Override
+    public @NonNull List<String> onTabComplete(@NonNull CommandSender sender, String @NonNull [] args) {
+        List<String> results = new ArrayList<>();
+
+        if (args.length == 2 && sender.hasPermission(super.playerPermission()))
+            for (Player player : Bukkit.getOnlinePlayers())
+                results.add(player.getName());
+
+        return results;
     }
 }
