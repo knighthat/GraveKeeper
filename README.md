@@ -1,5 +1,6 @@
+<!--suppress HtmlDeprecatedAttribute, HtmlDeprecatedAttribute -->
 <p align="center">
-  <img src="https://i.ibb.co/9T3NjbW/gravekeeper-icon-128x128.png" width="128px"/>
+  <img src="https://i.ibb.co/9T3NjbW/gravekeeper-icon-128x128.png" alt="plugin logo" width="128px"/>
 </p>
 
 # Grave Keeper
@@ -16,15 +17,18 @@ PLUGIN IS CURRENTLY IN EARLY STAGE. MORE FEATURES WILL BE ADDED
 - Stores items and exp.
 - Automatically creates chest at player's death location.
 - Includes commands to track, manipulate, and manage "grave" such as:
+    - [**Reload**](https://github.com/knighthat/GraveKeeper/wiki/Commands#Reload)
     - [**List**](https://github.com/knighthat/GraveKeeper/wiki/Commands#List)
-    - [**Peak**](https://github.com/knighthat/GraveKeeper/wiki/Commands#peak)
+    - [**Peak**](https://github.com/knighthat/GraveKeeper/wiki/Commands#Peak)
+    - [**Delete**](https://github.com/knighthat/GraveKeeper/wiki/Commands#Delete)
+    - [**Reset**](https://github.com/knighthat/GraveKeeper/wiki/Commands#Reset)
 
 ## Installation
 
 > This plugin is created using PaperMC API. Therefore, not all server distribution will be compatible. More tests will
 > be done to ensure the best possible experience for all users.
 
-To install the Grave Keeper plugin on your Minecraft server, follow these steps:
+To install the DeathChest plugin on your Minecraft server, follow these steps:
 
 1. Download the plugin from the [**SpigotMC**](https://www.spigotmc.org/resources/109521/).
 2. Copy the plugin JAR file to the `plugins` directory in your Minecraft server.
@@ -51,5 +55,6 @@ the [**Development**](https://github.com/knighthat/GraveKeeper/tree/development)
 
 ## Support me
 
-If you found my plugin useful, please help me with some donation [***HERE***](https://paypal.me/TnKnightN). Biggest
-thanks!
+If my plugin has brought you joy and value, I humbly request your support through a [
+***DONATION***](https://paypal.me/TnKnightN). Your generosity would be
+deeply appreciated and will enable me to continue creating and improving this offering for you.
