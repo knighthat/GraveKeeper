@@ -27,6 +27,7 @@ import me.knighthat.plugin.file.MenuFile;
 import me.knighthat.plugin.instance.Grave;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class MenuManager {
 
@@ -51,7 +52,10 @@ public class MenuManager {
         String exp_name = FILE.string(PEAK.concat("exp.name"), grave.getContent().replacements());
 
         ItemStack exp_bottle = new ItemStack(FILE.material(PEAK.concat("exp.material")));
-        exp_bottle.editMeta(meta -> meta.setDisplayName(Colorization.color(exp_name)));
+        ItemMeta meta = exp_bottle.getItemMeta();
+        String display = Colorization.color(exp_name);
+        meta.setDisplayName(display);
+        exp_bottle.setItemMeta(meta);
 
         return exp_bottle;
     }
