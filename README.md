@@ -1,6 +1,10 @@
 <!--suppress HtmlDeprecatedAttribute, HtmlDeprecatedAttribute -->
 <p align="center">
   <img src="https://i.ibb.co/9T3NjbW/gravekeeper-icon-128x128.png" alt="plugin logo" width="128px"/>
+  <br>
+  <span style="font-size: 2rem; color: #0bff01">
+    <b>!!! PLUGIN IS NOW AVAILABLE FOR SPIGOT SERVER !!!</b>
+  </span>
 </p>
 
 # Grave Keeper
@@ -17,11 +21,13 @@ PLUGIN IS CURRENTLY IN EARLY STAGE. MORE FEATURES WILL BE ADDED
 - Stores items and exp.
 - Automatically creates chest at player's death location.
 - Includes commands to track, manipulate, and manage "grave" such as:
+    - [**Help**](https://github.com/knighthat/GraveKeeper/wiki/Commands#Help)
     - [**Reload**](https://github.com/knighthat/GraveKeeper/wiki/Commands#Reload)
     - [**List**](https://github.com/knighthat/GraveKeeper/wiki/Commands#List)
     - [**Peak**](https://github.com/knighthat/GraveKeeper/wiki/Commands#Peak)
     - [**Delete**](https://github.com/knighthat/GraveKeeper/wiki/Commands#Delete)
     - [**Reset**](https://github.com/knighthat/GraveKeeper/wiki/Commands#Reset)
+    - [**Teleport**](https://github.com/knighthat/GraveKeeper/wiki/Commands#Teleport)
 
 ## Installation
 
