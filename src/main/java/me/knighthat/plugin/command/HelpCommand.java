@@ -22,17 +22,24 @@ package me.knighthat.plugin.command;
 
 import lombok.NonNull;
 import me.knighthat.api.command.SubCommand;
-import me.knighthat.api.command.conditions.PlayerCommand;
 import me.knighthat.plugin.handler.Helper;
-import me.knighthat.plugin.menu.MenuManager;
 import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.Permissible;
 
-public class ReloadCommand extends SubCommand implements PlayerCommand {
+import java.util.List;
+import java.util.Map;
+
+public class HelpCommand extends SubCommand {
 
     @Override
     public @NonNull String permission() {
-        return "reload";
+        return "";
+    }
+
+    @Override
+    public boolean hasPermission(@NonNull Permissible permissible) {
+        return true;
     }
 
     @Override
@@ -42,11 +49,24 @@ public class ReloadCommand extends SubCommand implements PlayerCommand {
 
     @Override
     public void execute(@NonNull CommandSender sender, String @NonNull [] args) {
-        Messenger.FILE.reload();
-        MenuManager.FILE.reload();
+        int page = 1;
 
-        Helper.reload();
+        if (args.length >= 1)
+            try {
+                page = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                Messenger.send(sender, "not_a_number", Map.of("%input", args[0]));
+                return;
+            }
 
-        Messenger.send(sender, "reload");
+        List<String> helps = Helper.get(page);
+        if (helps.size() == 0) {
+            Messenger.send(sender, "invalid_page_number", Map.of("%input", args[0]));
+            return;
+        }
+
+        helps.forEach(line -> Messenger.send(sender, new Messenger.Message(line)));
     }
+
+
 }

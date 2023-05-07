@@ -1,3 +1,7 @@
+# DO NOT modify this, or do it at your own risk.
+version: '${project.version}'
+
+
 prefix: "&6&lDeathChest &7&k]&r "
 reload: "&aPlugin successfully reloaded"
 
@@ -30,4 +34,62 @@ player_reset: "&2All of %player's graves are deleted!"
 teleport_message: "&5Successfully teleported to grave %id @ X:%x Y:%y Z:%z"
 teleport_not_safe: "&4Destination is not safe! Aborting..."
 
-
+# Help message
+not_a_number: "&e%input &cis not a number!"
+invalid_page_number: "&e%input &cis not a valid page number!"
+help_message:
+  header: "&aCommand assistant: &f(&e%current_page&f/&e%total_page&f)"
+  footer: "&b&l[..] &aoptional &8; &b&l<..> &drequired"
+  help:
+    usage: "&eUsage: &b/grave help [page]"
+    permissions:
+      - "&ePermission:"
+    description:
+      - "&eDesc: &bShow command's usage, permission(s), and description."
+  reload:
+    usage: "&eUsage: &b/grave reload"
+    permissions:
+      - "&ePermission:"
+      - "- &bgrave.command.reload"
+    description:
+      - "&eDesc: &bApply changes from files to plugin"
+  list:
+    usage: "&eUsage: &b/grave list [player]"
+    permissions:
+      - "&ePermissions:"
+      - "- &bgrave.command.list.self"
+      - "- &bgrave.command.list.players"
+    description:
+      - "&eDesc: &bList your own or other's grave ids"
+  peak:
+    usage: "&eUsage: &b/grave peak <id> [player]"
+    permissions:
+      - "&ePermissions:"
+      - "- &bgrave.command.peak.self"
+      - "- &bgrave.command.peak.players"
+    description:
+      - "&eDesc: &bShows grave's content"
+  reset:
+    usage: "&eUsage: &b/grave reset [player]"
+    permissions:
+      - "&ePermission:"
+      - "- &bgrave.command.reset.self"
+      - "- &bgrave.command.reset.players"
+    description:
+      - "&eDesc: &bRemove ALL graves"
+  delete:
+    usage: "&eUsage: &b/grave delete <id> [player]"
+    permissions:
+      - "&ePermission:"
+      - "- &bgrave.command.delete.self"
+      - "- &bgrave.command.delete.players"
+    description:
+      - "&eDesc: &bDelete a grave from player"
+  teleport:
+    usage: "&eUsage: &b/grave teleport <id> [player]"
+    permissions:
+      - "&ePermission:"
+      - "- &bgrave.command.teleport.self"
+      - "- &bgrave.command.teleport.players"
+    description:
+      - "&eDesc: &bTeleport to a grave"

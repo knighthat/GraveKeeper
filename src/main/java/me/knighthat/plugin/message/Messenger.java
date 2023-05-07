@@ -18,7 +18,7 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin.message;
+package me.knighthat.plugin.handler;
 
 import lombok.Getter;
 import lombok.NonNull;

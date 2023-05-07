@@ -39,7 +39,7 @@ import java.util.List;
 
 public class CommandManager implements TabExecutor {
 
-    private static final @NonNull List<SubCommand> SUB_COMMANDS = new LinkedList<>();
+    public static final @NonNull List<SubCommand> SUB_COMMANDS = new LinkedList<>();
 
     static {
         SUB_COMMANDS.add(new ReloadCommand());
@@ -48,6 +48,7 @@ public class CommandManager implements TabExecutor {
         SUB_COMMANDS.add(new ResetCommand());
         SUB_COMMANDS.add(new DeleteCommand());
         SUB_COMMANDS.add(new TeleportCommand());
+        SUB_COMMANDS.add(new HelpCommand());
     }
 
 
