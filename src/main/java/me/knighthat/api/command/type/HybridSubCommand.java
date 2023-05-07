@@ -22,7 +22,7 @@ package me.knighthat.api.command.type;
 
 import lombok.NonNull;
 import me.knighthat.api.command.SubCommand;
-import me.knighthat.plugin.message.Messenger;
+import me.knighthat.plugin.handler.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -31,11 +31,6 @@ import org.bukkit.permissions.Permissible;
 import java.util.Map;
 
 public abstract class HybridSubCommand extends SubCommand {
-
-    @Override
-    public boolean playerOnly() {
-        return false;
-    }
 
     @Deprecated
     @Override

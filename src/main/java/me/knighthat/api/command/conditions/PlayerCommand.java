@@ -18,22 +18,7 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin.command;
+package me.knighthat.api.command.conditions;
 
-import lombok.NonNull;
-import me.knighthat.api.command.conditions.PlayerCommand;
-import me.knighthat.api.command.conditions.ReverseHybridTabComplete;
-import me.knighthat.api.command.type.ReverseHybridSubCommand;
-import me.knighthat.plugin.instance.Grave;
-import me.knighthat.plugin.menu.MenuManager;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-public class PeakCommand extends ReverseHybridSubCommand implements PlayerCommand, ReverseHybridTabComplete {
-
-    @Override
-    public void execute(@NonNull CommandSender sender, @NonNull Player target, @NonNull Grave grave) {
-        Player player = (Player) sender;
-        player.openInventory(MenuManager.peak(grave));
-    }
+public interface PlayerCommand {
 }

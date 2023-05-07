@@ -46,15 +46,14 @@ public class EventController implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         List<ItemStack> drops = event.getDrops();
 
         if (drops.isEmpty() && event.getDroppedExp() == 0)
             return;
 
         PlayerDeathEventHandler.process(player);
-
-        event.setShouldDropExperience(false);
+        event.setDroppedExp(0);
         drops.removeIf(drop -> !drop.getType().equals(Material.AIR));
     }
 

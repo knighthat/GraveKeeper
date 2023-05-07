@@ -22,8 +22,8 @@ package me.knighthat.api.command.type;
 
 import lombok.NonNull;
 import me.knighthat.api.persistent.DataHandler;
+import me.knighthat.plugin.handler.Messenger;
 import me.knighthat.plugin.instance.Grave;
-import me.knighthat.plugin.message.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -73,10 +73,10 @@ public abstract class ReverseHybridSubCommand extends HybridSubCommand {
 
         Grave grave = DataHandler.get(target, args[0]);
         if (!grave.isValid()) {
-            Messenger.send(sender, "no_grave_found", Map.of("%id", args[0]));
+            Messenger.send(sender, "grave_not_found", Map.of("%id", args[0]));
             return;
         }
-        
+
         execute(sender, target, grave);
     }
 

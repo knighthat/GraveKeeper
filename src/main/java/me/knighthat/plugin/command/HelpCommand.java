@@ -21,19 +21,52 @@
 package me.knighthat.plugin.command;
 
 import lombok.NonNull;
-import me.knighthat.api.command.conditions.PlayerCommand;
-import me.knighthat.api.command.conditions.ReverseHybridTabComplete;
-import me.knighthat.api.command.type.ReverseHybridSubCommand;
-import me.knighthat.plugin.instance.Grave;
-import me.knighthat.plugin.menu.MenuManager;
+import me.knighthat.api.command.SubCommand;
+import me.knighthat.plugin.handler.Helper;
+import me.knighthat.plugin.handler.Messenger;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 
-public class PeakCommand extends ReverseHybridSubCommand implements PlayerCommand, ReverseHybridTabComplete {
+import java.util.List;
+import java.util.Map;
+
+public class HelpCommand extends SubCommand {
 
     @Override
-    public void execute(@NonNull CommandSender sender, @NonNull Player target, @NonNull Grave grave) {
-        Player player = (Player) sender;
-        player.openInventory(MenuManager.peak(grave));
+    public @NonNull String permission() {
+        return "";
     }
+
+    @Override
+    public boolean hasPermission(@NonNull Permissible permissible) {
+        return true;
+    }
+
+    @Override
+    public boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args) {
+        return true;
+    }
+
+    @Override
+    public void execute(@NonNull CommandSender sender, String @NonNull [] args) {
+        int page = 1;
+
+        if (args.length >= 1)
+            try {
+                page = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                Messenger.send(sender, "not_a_number", Map.of("%input", args[0]));
+                return;
+            }
+
+        List<String> helps = Helper.get(page);
+        if (helps.size() == 0) {
+            Messenger.send(sender, "invalid_page_number", Map.of("%input", args[0]));
+            return;
+        }
+
+        helps.forEach(line -> Messenger.send(sender, new Messenger.Message(line)));
+    }
+
+
 }

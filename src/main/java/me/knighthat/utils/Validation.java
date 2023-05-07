@@ -23,6 +23,7 @@ package me.knighthat.utils;
 import me.knighthat.api.persistent.DataHandler;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
 
 public class Validation {
@@ -30,6 +31,6 @@ public class Validation {
     public static boolean isGrave(@Nullable Block block) {
         return block != null &&
                 block.getState() instanceof TileState state &&
-                state.getPersistentDataContainer().has(DataHandler.KEY);
+                state.getPersistentDataContainer().has(DataHandler.KEY, PersistentDataType.STRING);
     }
 }

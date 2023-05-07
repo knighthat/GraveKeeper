@@ -18,13 +18,15 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.command.type;
+package me.knighthat.api.command.conditions;
 
-import me.knighthat.api.command.SubCommand;
+import lombok.NonNull;
+import org.bukkit.command.CommandSender;
 
-public abstract class OpenSubCommand extends SubCommand {
-    @Override
-    public boolean playerOnly() {
-        return false;
-    }
+import java.util.List;
+
+@FunctionalInterface
+public interface OfferTabComplete {
+
+    @NonNull List<String> onTabComplete(@NonNull CommandSender sender, String @NonNull [] args);
 }

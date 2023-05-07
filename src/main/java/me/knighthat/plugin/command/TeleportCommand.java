@@ -24,16 +24,35 @@ import lombok.NonNull;
 import me.knighthat.api.command.conditions.PlayerCommand;
 import me.knighthat.api.command.conditions.ReverseHybridTabComplete;
 import me.knighthat.api.command.type.ReverseHybridSubCommand;
+import me.knighthat.plugin.handler.Messenger;
 import me.knighthat.plugin.instance.Grave;
-import me.knighthat.plugin.menu.MenuManager;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class PeakCommand extends ReverseHybridSubCommand implements PlayerCommand, ReverseHybridTabComplete {
+public class TeleportCommand extends ReverseHybridSubCommand implements PlayerCommand, ReverseHybridTabComplete {
 
     @Override
     public void execute(@NonNull CommandSender sender, @NonNull Player target, @NonNull Grave grave) {
-        Player player = (Player) sender;
-        player.openInventory(MenuManager.peak(grave));
+        Player executer = (Player) sender;
+
+        Location destination = grave.getCoordinates().get().add(.5d, 1d, .5d);
+        destination.setPitch(90f);
+
+        boolean isSafe = true;
+        for (int i = 0; i < 2; i++) {
+            Location clone = destination.clone();
+            isSafe = clone.add(0d, i, 0d).getBlock().getType().equals(Material.AIR);
+        }
+
+        String path = "teleport_not_safe";
+
+        if (isSafe) {
+            executer.teleport(destination);
+            path = "teleport_message";
+        }
+
+        Messenger.send(sender, path, target, grave);
     }
 }

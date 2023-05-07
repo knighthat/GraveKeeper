@@ -21,23 +21,58 @@
 package me.knighthat.debugger;
 
 import lombok.NonNull;
-import org.slf4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 
 public class Debugger {
 
-    public static @NonNull Logger LOGGER;
+    public static java.util.logging.Logger FALLBACK;
+    public static @Nullable org.slf4j.Logger LOGGER = null;
 
     public static void err(@NonNull String error, @NonNull String cause) {
-        LOGGER.error(error);
-        LOGGER.error("Caused by: " + cause);
+        try {
+            log(LOGGER, DebugLevel.ERR, error);
+            log(LOGGER, DebugLevel.ERR, "Caused by: " + cause);
+        } catch (NullPointerException e) {
+            log(FALLBACK, DebugLevel.ERR, error);
+            log(FALLBACK, DebugLevel.ERR, "Caused by: " + cause);
+        }
     }
 
     public static void log(@NonNull String message) {
-        LOGGER.info(message);
+        try {
+            log(LOGGER, DebugLevel.INFO, message);
+        } catch (NullPointerException e) {
+            log(FALLBACK, DebugLevel.INFO, message);
+        }
     }
 
     public static void warn(@NonNull String warning) {
-        LOGGER.warn(warning);
+        try {
+            log(LOGGER, DebugLevel.WARN, warning);
+        } catch (NullPointerException e) {
+            log(FALLBACK, DebugLevel.WARN, warning);
+        }
+    }
+
+
+    public static void log(@NonNull org.slf4j.Logger logger, @NonNull DebugLevel level, @NonNull String message) {
+        switch (level) {
+            case INFO -> logger.info(message);
+            case WARN -> logger.warn(message);
+            case ERR -> logger.error(message);
+        }
+    }
+
+    public static void log(@NonNull java.util.logging.Logger logger, @NonNull DebugLevel level, @NonNull String message) {
+        switch (level) {
+            case INFO -> logger.info(message);
+            case WARN -> logger.warning(message);
+            case ERR -> logger.severe(message);
+        }
+    }
+
+    enum DebugLevel {
+        INFO, WARN, ERR
     }
 }

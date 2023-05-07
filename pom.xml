@@ -6,7 +6,7 @@
 
     <groupId>me.knighthat</groupId>
     <artifactId>plugin</artifactId>
-    <version>0.5.1</version>
+    <version>0.6</version>
     <packaging>jar</packaging>
 
     <name>GraveKeeper</name>
@@ -54,6 +54,10 @@
 
     <repositories>
         <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
             <id>papermc-repo</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
@@ -64,6 +68,12 @@
     </repositories>
 
     <dependencies>
+        <!--        <dependency>-->
+        <!--            <groupId>org.spigotmc</groupId>-->
+        <!--            <artifactId>spigot-api</artifactId>-->
+        <!--            <version>1.19.4-R0.1-SNAPSHOT</version>-->
+        <!--            <scope>provided</scope>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
@@ -80,6 +90,11 @@
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.0.1</version>
         </dependency>
     </dependencies>
 </project>

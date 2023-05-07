@@ -26,6 +26,8 @@ import me.knighthat.plugin.GraveKeeper;
 import me.knighthat.plugin.instance.Grave;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public abstract class PluginFile extends FileTemplate {
@@ -110,6 +112,26 @@ public abstract class PluginFile extends FileTemplate {
     }
 
     /**
+     * Get a list of string from path.<br>
+     * Returns an empty list if none found.
+     *
+     * @param path Where to get list
+     * @return A list from file
+     */
+    public @NonNull List<String> list(@NonNull String path) {
+        List<String> result = new ArrayList<>();
+
+        if (contains(path))
+            if (!get().isList(path)) {
+                String message = "{0} is not a list!";
+                Debugger.warn(MessageFormat.format(message, path));
+            } else
+                result = super.get().getStringList(path);
+
+        return result;
+    }
+
+    /**
      * Checks if path exists in file.<br>
      * Log a warning to console
      * if path does not exist.
@@ -117,7 +139,7 @@ public abstract class PluginFile extends FileTemplate {
      * @param path Where to get object
      * @return If path exists in file
      */
-    private boolean contains(@NonNull String path) {
+    public boolean contains(@NonNull String path) {
         if (!get().contains(path)) {
             String message = "{0} not found in {1}! (404)";
             Debugger.warn(MessageFormat.format(message, path, super.getFileName()));

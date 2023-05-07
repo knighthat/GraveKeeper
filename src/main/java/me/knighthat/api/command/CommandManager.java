@@ -21,8 +21,10 @@
 package me.knighthat.api.command;
 
 import lombok.NonNull;
+import me.knighthat.api.command.conditions.OfferTabComplete;
+import me.knighthat.api.command.conditions.PlayerCommand;
 import me.knighthat.plugin.command.*;
-import me.knighthat.plugin.message.Messenger;
+import me.knighthat.plugin.handler.Messenger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -37,7 +39,7 @@ import java.util.List;
 
 public class CommandManager implements TabExecutor {
 
-    private static final @NonNull List<SubCommand> SUB_COMMANDS = new LinkedList<>();
+    public static final @NonNull List<SubCommand> SUB_COMMANDS = new LinkedList<>();
 
     static {
         SUB_COMMANDS.add(new ReloadCommand());
@@ -45,6 +47,8 @@ public class CommandManager implements TabExecutor {
         SUB_COMMANDS.add(new PeakCommand());
         SUB_COMMANDS.add(new ResetCommand());
         SUB_COMMANDS.add(new DeleteCommand());
+        SUB_COMMANDS.add(new TeleportCommand());
+        SUB_COMMANDS.add(new HelpCommand());
     }
 
 
@@ -55,8 +59,10 @@ public class CommandManager implements TabExecutor {
         SubCommand sub = get(args[0]);
         if (sub == null) return true;
 
-        if (sub.playerOnly() && !(sender instanceof Player))
+        if (sub instanceof PlayerCommand && !(sender instanceof Player)) {
+            Messenger.send(sender, "cmd_requires_player");
             return true;
+        }
 
         if (!sub.hasPermission(sender)) {
             Messenger.send(sender, "no_cmd_perm");
@@ -87,11 +93,26 @@ public class CommandManager implements TabExecutor {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String start, @NotNull String[] args) {
         List<String> results = new ArrayList<>();
 
-        if (args.length == 1)
-            for (SubCommand sub : SUB_COMMANDS)
-                if (sub.getName().startsWith(args[0]))
-                    results.add(sub.getName());
+        if (args.length == 1) {
 
-        return results;
+            for (SubCommand sub : SUB_COMMANDS)
+                results.add(sub.getName());
+
+        } else {
+
+            SubCommand sub = get(args[0]);
+            if (sub instanceof PlayerCommand && !(sender instanceof Player))
+                return results;
+
+            if (sub instanceof OfferTabComplete instance)
+                results.addAll(instance.onTabComplete(sender, args));
+
+        }
+
+        return results
+                .stream()
+                .filter(a -> a.startsWith(args[args.length - 1]))
+                .sorted()
+                .toList();
     }
 }
