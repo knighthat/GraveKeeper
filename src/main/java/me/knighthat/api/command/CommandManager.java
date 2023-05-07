@@ -24,7 +24,7 @@ import lombok.NonNull;
 import me.knighthat.api.command.conditions.OfferTabComplete;
 import me.knighthat.api.command.conditions.PlayerCommand;
 import me.knighthat.plugin.command.*;
-import me.knighthat.plugin.message.Messenger;
+import me.knighthat.plugin.handler.Messenger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;

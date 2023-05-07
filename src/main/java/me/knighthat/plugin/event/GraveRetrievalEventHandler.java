@@ -22,8 +22,8 @@ package me.knighthat.plugin.event;
 
 import lombok.NonNull;
 import me.knighthat.api.persistent.DataHandler;
+import me.knighthat.plugin.handler.Messenger;
 import me.knighthat.plugin.instance.Grave;
-import me.knighthat.plugin.message.Messenger;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;

@@ -23,7 +23,7 @@ package me.knighthat.plugin.command;
 import lombok.NonNull;
 import me.knighthat.api.command.SubCommand;
 import me.knighthat.plugin.handler.Helper;
-import me.knighthat.plugin.message.Messenger;
+import me.knighthat.plugin.handler.Messenger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permissible;
 

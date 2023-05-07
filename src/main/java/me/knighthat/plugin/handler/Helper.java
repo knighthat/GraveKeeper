@@ -25,7 +25,6 @@ import me.knighthat.api.command.CommandManager;
 import me.knighthat.api.command.SubCommand;
 import me.knighthat.api.style.Colorization;
 import me.knighthat.plugin.file.MessageFile;
-import me.knighthat.plugin.message.Messenger;
 
 import java.util.ArrayList;
 import java.util.List;
