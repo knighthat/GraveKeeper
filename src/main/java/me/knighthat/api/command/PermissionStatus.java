@@ -20,15 +20,7 @@
 
 package me.knighthat.api.command;
 
-import lombok.NonNull;
-import org.bukkit.command.CommandSender;
+public enum PermissionStatus {
 
-public abstract class SubCommand {
-
-    public @NonNull String name() {
-        String className = getClass().getSimpleName().toLowerCase();
-        return className.replace("command", "");
-    }
-
-    public abstract void execute(@NonNull CommandSender sender, String @NonNull [] args);
+    MISSING_ID, NO_PERMISSION, NOT_PLAYER, PLAYER_NOT_FOUND, PASSED
 }

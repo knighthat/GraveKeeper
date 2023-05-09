@@ -61,7 +61,7 @@ public class Helper {
         }
 
         for (SubCommand sub : CommandManager.SUB_COMMANDS) {
-            String path = mainPath + "." + sub.getName() + ".";
+            String path = mainPath + "." + sub.name() + ".";
 
             String usage = file.string(path.concat("usage"));
             usage = Colorization.color(usage);
@@ -72,7 +72,7 @@ public class Helper {
             List<String> description = file.list(path.concat("description"));
             description = description.stream().map(Colorization::color).toList();
 
-            CommandHelpTemplate template = new CommandHelpTemplate(sub.getName(), usage, permissions, description);
+            CommandHelpTemplate template = new CommandHelpTemplate(sub.name(), usage, permissions, description);
             COMMAND_TEMPLATES.add(template);
         }
     }
