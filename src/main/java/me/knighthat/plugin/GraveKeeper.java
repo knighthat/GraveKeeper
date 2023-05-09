@@ -20,25 +20,32 @@
 
 package me.knighthat.plugin;
 
+import lombok.NonNull;
 import me.knighthat.api.command.CommandManager;
+import me.knighthat.api.persistent.DataHandler;
 import me.knighthat.debugger.Debugger;
 import me.knighthat.plugin.event.EventController;
 import me.knighthat.plugin.file.MenuFile;
 import me.knighthat.plugin.file.MessageFile;
 import me.knighthat.plugin.handler.Messenger;
 import me.knighthat.plugin.menu.MenuManager;
-import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class GraveKeeper extends JavaPlugin {
 
-    public static boolean isPaper = Bukkit.getServer().getName().equals("Paper");
+    public static @NonNull GraveKeeper INSTANCE;
 
     {
+        INSTANCE = this;
+
+        DataHandler.KEY = new NamespacedKey(INSTANCE, getDescription().getName());
+
         Debugger.FALLBACK = this.getLogger();
         if (getServer().getName().equals("Paper"))
             Debugger.LOGGER = this.getSLF4JLogger();
+
         Messenger.FILE = new MessageFile(this);
         MenuManager.FILE = new MenuFile(this);
     }
