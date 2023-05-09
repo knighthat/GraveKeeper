@@ -21,27 +21,22 @@
 package me.knighthat.api.persistent;
 
 import lombok.NonNull;
-import me.knighthat.plugin.GraveKeeper;
 import me.knighthat.plugin.instance.Grave;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class DataHandler {
 
-    private static final @NonNull GraveKeeper PLUGIN = JavaPlugin.getPlugin(GraveKeeper.class);
+    private static final @NonNull Map<UUID, Grave[]> GRAVE_LIST = new HashMap<>();
 
-    public static final @NonNull NamespacedKey KEY = new NamespacedKey(PLUGIN, PLUGIN.getDescription().getName());
     private static final @NonNull PersistentDataType<byte[], Grave[]> CHEST = new GraveDataType();
     private static final @NonNull PersistentDataType<String, String> ID = PersistentDataType.STRING;
+    public static @NonNull NamespacedKey KEY;
 
     /*
 
@@ -65,9 +60,17 @@ public class DataHandler {
 
     */
     public static Grave @NonNull [] pull(@NonNull Player player) {
-        PersistentDataContainer container = player.getPersistentDataContainer();
-        return container.has(KEY, CHEST) ? container.get(KEY, CHEST) : new Grave[0];
+        UUID playerUID = player.getUniqueId();
+
+        if (!GRAVE_LIST.containsKey(playerUID)) {
+            PersistentDataContainer container = player.getPersistentDataContainer();
+            Grave[] graves = container.has(KEY, CHEST) ? container.get(KEY, CHEST) : new Grave[0];
+            GRAVE_LIST.put(playerUID, graves);
+        }
+
+        return GRAVE_LIST.get(playerUID);
     }
+
 
     public static void push(@NonNull Player player, @NonNull Grave grave) {
         Grave[] graves = pull(player);
@@ -85,6 +88,7 @@ public class DataHandler {
     }
 
     public static void set(@NonNull Player player, @NonNull Grave[] graves) {
+        GRAVE_LIST.put(player.getUniqueId(), graves);
         player.getPersistentDataContainer().set(KEY, CHEST, graves);
     }
 
@@ -99,6 +103,7 @@ public class DataHandler {
         for (Grave grave : pull(player))
             grave.remove();
 
+        GRAVE_LIST.remove(player.getUniqueId());
         player.getPersistentDataContainer().remove(KEY);
     }
 
