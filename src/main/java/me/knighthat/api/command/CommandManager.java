@@ -21,8 +21,11 @@
 package me.knighthat.api.command;
 
 import lombok.NonNull;
+import me.knighthat.api.command.conditions.MultiplePermissions;
 import me.knighthat.api.command.conditions.OfferTabComplete;
 import me.knighthat.api.command.conditions.PlayerCommand;
+import me.knighthat.api.command.conditions.SinglePermission;
+import me.knighthat.api.command.type.ReverseHybridSubCommand;
 import me.knighthat.plugin.command.*;
 import me.knighthat.plugin.handler.Messenger;
 import org.bukkit.command.Command;
@@ -32,10 +35,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class CommandManager implements TabExecutor {
 
@@ -64,14 +64,26 @@ public class CommandManager implements TabExecutor {
             return true;
         }
 
-        if (!sub.hasPermission(sender)) {
-            Messenger.send(sender, "no_cmd_perm");
-            return true;
+        String[] newArgs = removeFirst(args);
+        PermissionStatus permissionStatus = PermissionStatus.PASSED;
+
+        if (sub instanceof SinglePermission permission) {
+            permissionStatus = permission.hasPermission(sender);
+        } else if (sub instanceof MultiplePermissions permissions) {
+            permissionStatus = permissions.hasPermission(sender, newArgs);
         }
 
-        String[] newArgs = removeFirst(args);
-        if (sub.prerequisite(sender, newArgs))
-            sub.execute(sender, newArgs);
+        switch (permissionStatus) {
+            case PASSED -> sub.execute(sender, newArgs);
+            case MISSING_ID -> Messenger.send(sender, "missing_id");
+            case NO_PERMISSION -> Messenger.send(sender, "no_cmd_perm");
+            case NOT_PLAYER -> Messenger.send(sender, "cmd_requires_player");
+            case PLAYER_NOT_FOUND -> {
+                int index = sub instanceof ReverseHybridSubCommand ? 1 : 0;
+                String input = newArgs[index];
+                Messenger.send(sender, "player_not_found", Map.of("%player", input));
+            }
+        }
 
         return true;
     }
@@ -79,7 +91,7 @@ public class CommandManager implements TabExecutor {
     private @Nullable SubCommand get(@NonNull String name) {
 
         for (SubCommand sub : SUB_COMMANDS)
-            if (sub.getName().equalsIgnoreCase(name))
+            if (sub.name().equalsIgnoreCase(name))
                 return sub;
 
         return null;
@@ -96,7 +108,7 @@ public class CommandManager implements TabExecutor {
         if (args.length == 1) {
 
             for (SubCommand sub : SUB_COMMANDS)
-                results.add(sub.getName());
+                results.add(sub.name());
 
         } else {
 

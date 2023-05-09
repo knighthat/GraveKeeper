@@ -25,27 +25,11 @@ import me.knighthat.api.command.SubCommand;
 import me.knighthat.plugin.handler.Helper;
 import me.knighthat.plugin.handler.Messenger;
 import org.bukkit.command.CommandSender;
-import org.bukkit.permissions.Permissible;
 
 import java.util.List;
 import java.util.Map;
 
 public class HelpCommand extends SubCommand {
-
-    @Override
-    public @NonNull String permission() {
-        return "";
-    }
-
-    @Override
-    public boolean hasPermission(@NonNull Permissible permissible) {
-        return true;
-    }
-
-    @Override
-    public boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args) {
-        return true;
-    }
 
     @Override
     public void execute(@NonNull CommandSender sender, String @NonNull [] args) {
@@ -67,6 +51,4 @@ public class HelpCommand extends SubCommand {
 
         helps.forEach(line -> Messenger.send(sender, new Messenger.Message(line)));
     }
-
-
 }

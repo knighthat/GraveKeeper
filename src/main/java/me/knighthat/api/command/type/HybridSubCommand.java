@@ -21,63 +21,53 @@
 package me.knighthat.api.command.type;
 
 import lombok.NonNull;
+import me.knighthat.api.command.PermissionStatus;
 import me.knighthat.api.command.SubCommand;
-import me.knighthat.plugin.handler.Messenger;
+import me.knighthat.api.command.conditions.MultiplePermissions;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permissible;
 
-import java.util.Map;
+public abstract class HybridSubCommand extends SubCommand implements MultiplePermissions {
 
-public abstract class HybridSubCommand extends SubCommand {
+    protected @NonNull String selfPermission() {
+        return this.permission("self");
+    }
 
-    @Deprecated
-    @Override
-    public @NonNull String permission() {
-        return "";
+    protected @NonNull String playerPermission() {
+        return this.permission("players");
+    }
+
+    private @NonNull String permission(@NonNull String type) {
+        return "grave.command." + super.name() + "." + type;
     }
 
     @Override
-    public boolean hasPermission(@NonNull Permissible permissible) {
-        return true;
-    }
-
-    @Override
-    public boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args) {
+    public @NonNull PermissionStatus hasPermission(@NonNull CommandSender sender, String @NonNull [] args) {
         Player target;
 
         if (args.length == 0) {
             if (!(sender instanceof Player player)) {
-                Messenger.send(sender, "cmd_requires_player");
-                return false;
+                return PermissionStatus.NOT_PLAYER;
             } else {
                 target = player;
             }
         } else {
             target = Bukkit.getPlayer(args[0]);
-            if (target == null || !target.isOnline()) {
-                Messenger.send(sender, "player_not_found", Map.of("%player", args[0]));
-                return false;
-            }
+            if (target == null || !target.isOnline())
+                return PermissionStatus.PLAYER_NOT_FOUND;
         }
 
-        if ((target == sender && !sender.hasPermission(this.selfPermission())) ||
-                (target != sender && !sender.hasPermission(this.playerPermission()))) {
-            Messenger.send(sender, "no_cmd_perm");
-            return false;
-        }
-
-        return true;
+        return this.hasPermission(sender, target);
     }
 
-    public @NonNull String selfPermission() {
-        return "grave.command." + getName() + ".self";
+    protected @NonNull PermissionStatus hasPermission(@NonNull CommandSender sender, @NonNull Player target) {
+        boolean failedSelf = target == sender && !sender.hasPermission(this.selfPermission());
+        boolean failedAll = target != sender && !sender.hasPermission(this.playerPermission());
+
+        return failedSelf || failedAll ? PermissionStatus.NO_PERMISSION : PermissionStatus.PASSED;
     }
 
-    public @NonNull String playerPermission() {
-        return "grave.command." + getName() + ".players";
-    }
 
     @Override
     public void execute(@NonNull CommandSender sender, String @NonNull [] args) {

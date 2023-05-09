@@ -21,6 +21,7 @@
 package me.knighthat.api.command.type;
 
 import lombok.NonNull;
+import me.knighthat.api.command.PermissionStatus;
 import me.knighthat.api.persistent.DataHandler;
 import me.knighthat.plugin.handler.Messenger;
 import me.knighthat.plugin.instance.Grave;
@@ -33,37 +34,28 @@ import java.util.Map;
 public abstract class ReverseHybridSubCommand extends HybridSubCommand {
 
     @Override
-    public boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args) {
+    public @NonNull PermissionStatus hasPermission(@NonNull CommandSender sender, String @NonNull [] args) {
         Player target;
 
         switch (args.length) {
             case 0 -> {
-                Messenger.send(sender, "missing_id");
-                return false;
+                return PermissionStatus.MISSING_ID;
             }
             case 1 -> {
                 if (!(sender instanceof Player player)) {
-                    Messenger.send(sender, "cmd_requires_player");
-                    return false;
+                    return PermissionStatus.NOT_PLAYER;
+                } else {
+                    target = player;
                 }
-                target = player;
             }
             default -> {
                 target = Bukkit.getPlayer(args[1]);
-                if (target == null || !target.isOnline()) {
-                    Messenger.send(sender, "player_not_found", Map.of("%player", args[1]));
-                    return false;
-                }
+                if (target == null || !target.isOnline())
+                    return PermissionStatus.PLAYER_NOT_FOUND;
             }
         }
 
-        if ((target == sender && !sender.hasPermission(super.selfPermission())) ||
-                (target != sender && !sender.hasPermission(super.playerPermission()))) {
-            Messenger.send(sender, "no_cmd_perm");
-            return false;
-        }
-
-        return true;
+        return super.hasPermission(sender, target);
     }
 
     @Override

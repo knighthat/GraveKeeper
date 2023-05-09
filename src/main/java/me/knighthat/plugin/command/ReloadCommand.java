@@ -23,22 +23,13 @@ package me.knighthat.plugin.command;
 import lombok.NonNull;
 import me.knighthat.api.command.SubCommand;
 import me.knighthat.api.command.conditions.PlayerCommand;
+import me.knighthat.api.command.conditions.SinglePermission;
 import me.knighthat.plugin.handler.Helper;
 import me.knighthat.plugin.handler.Messenger;
 import me.knighthat.plugin.menu.MenuManager;
 import org.bukkit.command.CommandSender;
 
-public class ReloadCommand extends SubCommand implements PlayerCommand {
-
-    @Override
-    public @NonNull String permission() {
-        return "reload";
-    }
-
-    @Override
-    public boolean prerequisite(@NonNull CommandSender sender, String @NonNull [] args) {
-        return true;
-    }
+public class ReloadCommand extends SubCommand implements PlayerCommand, SinglePermission {
 
     @Override
     public void execute(@NonNull CommandSender sender, String @NonNull [] args) {

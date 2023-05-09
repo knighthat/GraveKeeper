@@ -18,17 +18,13 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.command;
+package me.knighthat.api.command.conditions;
 
 import lombok.NonNull;
+import me.knighthat.api.command.PermissionStatus;
 import org.bukkit.command.CommandSender;
 
-public abstract class SubCommand {
+public interface MultiplePermissions {
 
-    public @NonNull String name() {
-        String className = getClass().getSimpleName().toLowerCase();
-        return className.replace("command", "");
-    }
-
-    public abstract void execute(@NonNull CommandSender sender, String @NonNull [] args);
+    @NonNull PermissionStatus hasPermission(@NonNull CommandSender sender, String @NonNull [] args);
 }
