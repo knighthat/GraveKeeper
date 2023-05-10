@@ -81,14 +81,6 @@ public final class Grave implements Serializable {
         this(null, null, null, null, 0);
     }
 
-    public Grave(@NonNull me.knighthat.plugin.grave.Grave oldGrave) {
-        this(oldGrave.getId(),
-                oldGrave.getOwner(),
-                oldGrave.getCoordinates().get(),
-                oldGrave.getContent().items(),
-                oldGrave.getContent().experience());
-    }
-
     /**
      * Creates a valid Grave instance
      *
