@@ -23,10 +23,8 @@ package me.knighthat.plugin.instance;
 import lombok.Data;
 import lombok.NonNull;
 import me.knighthat.utils.Validation;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
@@ -139,12 +137,6 @@ public final class Grave implements Serializable {
 
         placeholders.put("%id", this.id);
         placeholders.put("%owner", this.owner.toString());
-
-        Player player = Bukkit.getPlayer(owner);
-        if (player != null && player.isOnline()) {
-            placeholders.put("%player", player.getName());
-            placeholders.put("%player_display", player.getDisplayName());
-        }
 
         placeholders.put("%date", this.date.toString());
         placeholders.putAll(this.content.replacements());
