@@ -42,7 +42,7 @@ To install the DeathChest plugin on your Minecraft server, follow these steps:
 
 ## Usage
 
-The ***Grave Keeper*** plugin does not require any per-installation steps except for assigning permissions to users to
+The ***Grave Keeper*** plugin does not require any pre-installation steps except for assigning permissions to users to
 use it properly.<br>
 Player's "grave" will be created upon death in order to preserve his/her inventory and experience point until said owner
 retrieve it.<br>
