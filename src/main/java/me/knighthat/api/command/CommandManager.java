@@ -27,7 +27,7 @@ import me.knighthat.api.command.conditions.PlayerCommand;
 import me.knighthat.api.command.conditions.SinglePermission;
 import me.knighthat.api.command.type.ReverseHybridSubCommand;
 import me.knighthat.plugin.command.*;
-import me.knighthat.plugin.handler.Messenger;
+import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -59,31 +59,35 @@ public class CommandManager implements TabExecutor {
         SubCommand sub = get(args[0]);
         if (sub == null) return true;
 
-        if (sub instanceof PlayerCommand && !(sender instanceof Player)) {
-            Messenger.send(sender, "cmd_requires_player");
-            return true;
-        }
-
         String[] newArgs = removeFirst(args);
         PermissionStatus permissionStatus = PermissionStatus.PASSED;
 
-        if (sub instanceof SinglePermission permission) {
-            permissionStatus = permission.hasPermission(sender);
-        } else if (sub instanceof MultiplePermissions permissions) {
-            permissionStatus = permissions.hasPermission(sender, newArgs);
-        }
+        if (!(sub instanceof PlayerCommand && !(sender instanceof Player))) {
+            if (sub instanceof SinglePermission permission) {
+                permissionStatus = permission.hasPermission(sender);
+            } else if (sub instanceof MultiplePermissions permissions) {
+                permissionStatus = permissions.hasPermission(sender, newArgs);
+            }
+        } else permissionStatus = PermissionStatus.NOT_PLAYER;
 
-        switch (permissionStatus) {
-            case PASSED -> sub.execute(sender, newArgs);
-            case MISSING_ID -> Messenger.send(sender, "missing_id");
-            case NO_PERMISSION -> Messenger.send(sender, "no_cmd_perm");
-            case NOT_PLAYER -> Messenger.send(sender, "cmd_requires_player");
+        Map<String, String> replacement = new HashMap<>();
+        String path = switch (permissionStatus) {
+            case MISSING_ID -> "missing_id";
+            case NO_PERMISSION -> "no_cmd_perm";
+            case NOT_PLAYER -> "cmd_requires_player";
             case PLAYER_NOT_FOUND -> {
                 int index = sub instanceof ReverseHybridSubCommand ? 1 : 0;
-                String input = newArgs[index];
-                Messenger.send(sender, "player_not_found", Map.of("%player", input));
+                replacement.put("%player", newArgs[index]);
+                yield "player_not_found";
             }
-        }
+            case PASSED -> {
+                sub.execute(sender, newArgs);
+                yield "";
+            }
+        };
+
+        if (!path.isEmpty())
+            Messenger.send(sender, path, null, null, replacement);
 
         return true;
     }
