@@ -24,8 +24,8 @@ import lombok.NonNull;
 import me.knighthat.api.command.conditions.OfferTabComplete;
 import me.knighthat.api.command.type.HybridSubCommand;
 import me.knighthat.api.persistent.DataHandler;
-import me.knighthat.plugin.handler.Messenger;
 import me.knighthat.plugin.instance.Grave;
+import me.knighthat.plugin.message.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -42,28 +42,11 @@ public class ListCommand extends HybridSubCommand implements OfferTabComplete {
         Grave[] graves = DataHandler.pull(target);
         if (graves.length == 0) {
             String path = isSelf ? "self_graves_empty" : "player_graves_empty";
-            Messenger.send(sender, path, target);
+            Messenger.send(sender, path, target, null, null);
             return;
         }
 
-        List<String> idList = gravesToIdList(DataHandler.pull(target));
-
-        String path = isSelf ? "self_graves" : "player_graves";
-        Messenger.send(sender, path, target);
-
-        idList.forEach(id ->
-                Messenger.send(sender, new Messenger.Message(id)));
-    }
-
-
-    public @NonNull List<String> gravesToIdList(@NonNull Grave... graves) {
-        List<String> list = new ArrayList<>(graves.length);
-
-        for (Grave grave : graves)
-            if (grave.isValid())
-                list.add(" - " + grave.getId());
-
-        return list;
+        Messenger.sendIdList(sender, target, graves);
     }
 
     @Override

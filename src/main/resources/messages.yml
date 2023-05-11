@@ -2,6 +2,31 @@
 version: '${project.version}'
 
 
+#################################################################
+#                                                               #
+#     Available Placeholders:                                   #
+#     - %player         : Player's registered name              #
+#     - %player_display : Player's special name                 #
+#                                                               #
+#     > Only available on single grave command                  #
+#       | E.g: (peak, delete, teleport)                         #
+#     - %id             : Grave's ID                            #
+#     - %owner          : UUID of the owner                     #
+#     - %date           : Date the grave was created            #
+#     - %material       : Shows items' materials                #
+#     - %exp            : How much EXP stored inside grave      #
+#     - %world          : UUID of the world grave belongs to    #
+#     - %x              : X location of grave                   #
+#     - %y              : Y location of grave                   #
+#     - %z              : Z location of grave                   #
+#                                                               #
+#     > Only support help command for now                       #
+#     - %input          : Provided argument                     #
+#     - %current_page   : Page number requested                 #
+#     - %total_page     : Total pages can be shown              #
+#                                                               #
+#################################################################
+
 prefix: "&6&lDeathChest &7&k]&r "
 reload: "&aPlugin successfully reloaded"
 

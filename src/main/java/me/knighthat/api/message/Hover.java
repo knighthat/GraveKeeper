@@ -18,37 +18,14 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin.event;
+package me.knighthat.api.message;
 
 import lombok.NonNull;
-import me.knighthat.api.persistent.DataHandler;
-import me.knighthat.plugin.instance.Grave;
-import me.knighthat.plugin.message.Messenger;
-import org.bukkit.block.Block;
-import org.bukkit.block.TileState;
-import org.bukkit.entity.Player;
 
-public class GraveRetrievalEventHandler {
+public record Hover(@NonNull Action action, @NonNull Object value) {
 
-    /**
-     * Removes "Grave", NBT data from player
-     *
-     * @param who     Person interacted with "grave"
-     * @param clicked Block got interacted
-     */
-    public static void process(@NonNull Player who, @NonNull Block clicked) {
-        String id = DataHandler.pull((TileState) clicked.getState());
-        Grave grave = DataHandler.get(who, id);
 
-        boolean isValid = grave.isValid();
-        if (isValid) {
-            DataHandler.remove(who, id);
-            grave.getContent().giveTo(who);
-            grave.remove();
-        }
-
-        String path = isValid ? "retrieve" : "not_owner";
-        Messenger.send(who, path, who, grave, null);
-
+    public enum Action {
+        SHOW_TEXT
     }
 }

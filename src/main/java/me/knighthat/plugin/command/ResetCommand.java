@@ -24,7 +24,7 @@ import lombok.NonNull;
 import me.knighthat.api.command.conditions.OfferTabComplete;
 import me.knighthat.api.command.type.HybridSubCommand;
 import me.knighthat.api.persistent.DataHandler;
-import me.knighthat.plugin.handler.Messenger;
+import me.knighthat.plugin.message.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,7 +39,7 @@ public class ResetCommand extends HybridSubCommand implements OfferTabComplete {
         DataHandler.reset(target);
 
         String path = target == sender ? "self_reset" : "player_reset";
-        Messenger.send(sender, path, target);
+        Messenger.send(sender, path, target, null, null);
     }
 
     @Override

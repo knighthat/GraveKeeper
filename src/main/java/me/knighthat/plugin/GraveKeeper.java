@@ -27,8 +27,8 @@ import me.knighthat.debugger.Debugger;
 import me.knighthat.plugin.event.EventController;
 import me.knighthat.plugin.file.MenuFile;
 import me.knighthat.plugin.file.MessageFile;
-import me.knighthat.plugin.handler.Messenger;
 import me.knighthat.plugin.menu.MenuManager;
+import me.knighthat.plugin.message.Messenger;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,10 +40,10 @@ public final class GraveKeeper extends JavaPlugin {
     {
         INSTANCE = this;
 
-        DataHandler.KEY = new NamespacedKey(INSTANCE, getDescription().getName());
+        DataHandler.KEY = new NamespacedKey(this, getDescription().getName());
 
         Debugger.FALLBACK = this.getLogger();
-        if (getServer().getName().equals("Paper"))
+        if (Messenger.isPaper)
             Debugger.LOGGER = this.getSLF4JLogger();
 
         Messenger.FILE = new MessageFile(this);
@@ -57,11 +57,6 @@ public final class GraveKeeper extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EventController(), this);
 
         // Register commands and tab completer
-        registerCommands();
-    }
-
-
-    private void registerCommands() {
         PluginCommand command = getCommand("gravekeeper");
         CommandManager commandManager = new CommandManager();
 

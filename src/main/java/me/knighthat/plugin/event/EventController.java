@@ -20,10 +20,7 @@
 
 package me.knighthat.plugin.event;
 
-import lombok.NonNull;
 import me.knighthat.api.menu.InteractableMenu;
-import me.knighthat.api.persistent.DataHandler;
-import me.knighthat.plugin.instance.Grave;
 import me.knighthat.utils.Validation;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -34,12 +31,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.ApiStatus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EventController implements Listener {
@@ -61,11 +55,12 @@ public class EventController implements Listener {
     public void playerInteractWithGrave(PlayerInteractEvent event) {
         Block block = event.getClickedBlock();
 
-        if (!Validation.isGrave(block))
-            return;
-
         switch (event.getAction()) {
             case RIGHT_CLICK_BLOCK, LEFT_CLICK_BLOCK -> {
+
+                if (!Validation.isGrave(block))
+                    return;
+
                 event.setCancelled(true);
                 GraveRetrievalEventHandler.process(event.getPlayer(), block);
             }
@@ -77,23 +72,5 @@ public class EventController implements Listener {
         Inventory inventory = event.getView().getTopInventory();
         if (inventory.getHolder() instanceof InteractableMenu menu)
             menu.onClick(event);
-    }
-
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval(inVersion = "0.7")
-    @EventHandler(priority = EventPriority.HIGH)
-    public void playerJoinEvent(@NonNull PlayerJoinEvent event) {
-        try {
-            Player player = event.getPlayer();
-            me.knighthat.plugin.grave.Grave[] oldArr = me.knighthat.api.deprecated.persistent.DataHandler.pull(player);
-            List<Grave> graves = new ArrayList<>(oldArr.length);
-
-            for (me.knighthat.plugin.grave.Grave grave : oldArr)
-                if (grave.isValid())
-                    graves.add(new Grave(grave));
-
-            DataHandler.set(player, graves.toArray(Grave[]::new));
-        } catch (ClassCastException ignored) {
-        }
     }
 }

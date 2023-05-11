@@ -24,8 +24,8 @@ import lombok.NonNull;
 import me.knighthat.api.command.conditions.ReverseHybridTabComplete;
 import me.knighthat.api.command.type.ReverseHybridSubCommand;
 import me.knighthat.api.persistent.DataHandler;
-import me.knighthat.plugin.handler.Messenger;
 import me.knighthat.plugin.instance.Grave;
+import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -37,6 +37,6 @@ public class DeleteCommand extends ReverseHybridSubCommand implements ReverseHyb
         grave.remove();
 
         String path = target == sender ? "self_delete" : "player_delete";
-        Messenger.send(sender, path, target, grave);
+        Messenger.send(sender, path, target, grave, null);
     }
 }

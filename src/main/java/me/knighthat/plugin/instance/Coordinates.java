@@ -74,6 +74,8 @@ public final class Coordinates implements Serializable {
      */
     public @NonNull Map<String, String> replacements() {
         Map<String, String> placeholders = new HashMap<>(3);
+        if (world != null)
+            placeholders.put("%world", world.toString());
         placeholders.put("%x", String.valueOf(this.x));
         placeholders.put("%y", String.valueOf(this.y));
         placeholders.put("%z", String.valueOf(this.z));
