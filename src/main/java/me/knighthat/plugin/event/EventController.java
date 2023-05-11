@@ -55,11 +55,12 @@ public class EventController implements Listener {
     public void playerInteractWithGrave(PlayerInteractEvent event) {
         Block block = event.getClickedBlock();
 
-        if (!Validation.isGrave(block))
-            return;
-
         switch (event.getAction()) {
             case RIGHT_CLICK_BLOCK, LEFT_CLICK_BLOCK -> {
+
+                if (!Validation.isGrave(block))
+                    return;
+
                 event.setCancelled(true);
                 GraveRetrievalEventHandler.process(event.getPlayer(), block);
             }
