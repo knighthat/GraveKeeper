@@ -24,8 +24,8 @@ import lombok.NonNull;
 import me.knighthat.api.command.conditions.PlayerCommand;
 import me.knighthat.api.command.conditions.ReverseHybridTabComplete;
 import me.knighthat.api.command.type.ReverseHybridSubCommand;
-import me.knighthat.plugin.handler.Messenger;
 import me.knighthat.plugin.instance.Grave;
+import me.knighthat.plugin.message.Messenger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -35,13 +35,13 @@ public class TeleportCommand extends ReverseHybridSubCommand implements PlayerCo
 
     @Override
     public void execute(@NonNull CommandSender sender, @NonNull Player target, @NonNull Grave grave) {
-        Player executer = (Player) sender;
+        Player player = (Player) sender;
 
         Location destination = grave.getCoordinates().get().add(.5d, 1d, .5d);
         destination.setPitch(90f);
 
         boolean isSafe = true;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 1; i <= 2; i++) {
             Location clone = destination.clone();
             isSafe = clone.add(0d, i, 0d).getBlock().getType().equals(Material.AIR);
         }
@@ -49,10 +49,10 @@ public class TeleportCommand extends ReverseHybridSubCommand implements PlayerCo
         String path = "teleport_not_safe";
 
         if (isSafe) {
-            executer.teleport(destination);
+            player.teleport(destination);
             path = "teleport_message";
         }
 
-        Messenger.send(sender, path, target, grave);
+        Messenger.send(sender, path, target, grave, null);
     }
 }

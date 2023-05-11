@@ -22,8 +22,8 @@ package me.knighthat.plugin.event;
 
 import lombok.NonNull;
 import me.knighthat.api.persistent.DataHandler;
-import me.knighthat.plugin.handler.Messenger;
 import me.knighthat.plugin.instance.Grave;
+import me.knighthat.plugin.message.Messenger;
 import me.knighthat.utils.ExpCalc;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -46,11 +46,8 @@ public class PlayerDeathEventHandler {
      */
     public static void process(@NonNull Player player) {
         Grave grave = registerDeathChest(player);
-        Map<String, String> replacements = new HashMap<>();
-        replacements.put("%id", grave.getId());
-        replacements.putAll(grave.getCoordinates().replacements());
 
-        Messenger.send(player, "death_message", replacements);
+        Messenger.sendDeathMessage(player, grave);
     }
 
     /**
