@@ -20,29 +20,21 @@
 
 package me.knighthat.plugin.file;
 
-import lombok.NonNull;
-import me.knighthat.api.file.PluginFile;
+import me.knighthat.api.file.yaml.YamlFile;
 import me.knighthat.plugin.GraveKeeper;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
+public class MessageFile extends YamlFile {
 
-public class MessageFile extends PluginFile {
-
-    public MessageFile(@NonNull GraveKeeper plugin) {
+    public MessageFile(@NotNull GraveKeeper plugin) {
         super(plugin, "messages");
     }
 
-    public @NonNull String prefix() {
+    public @NotNull String prefix() {
         return super.string("prefix");
     }
 
-    public @NonNull String message(@NonNull String path, @NonNull Map<String, String> replacements) {
-        String message = super.string(path, replacements);
-        return prefix().concat(message);
-    }
-
-    public @NonNull String message(@NonNull String path) {
-        return this.message(path, new HashMap<>(0));
+    public @NotNull String message(@NotNull String path) {
+        return prefix().concat(super.string(path));
     }
 }

@@ -18,13 +18,40 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.command.conditions;
+package me.knighthat.plugin.command.tabcomplete;
 
 import lombok.NonNull;
-import me.knighthat.api.command.PermissionStatus;
+import me.knighthat.api.command.tabcomplete.TabCompleter;
+import me.knighthat.plugin.instance.Grave;
+import me.knighthat.plugin.persistent.DataHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-public interface MultiplePermissions {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-    @NonNull PermissionStatus hasPermission(@NonNull CommandSender sender, String @NonNull [] args);
+public interface HybridTabComplete extends TabCompleter {
+
+    @Override
+    @NonNull
+    default List<String> tabComplete(@NonNull CommandSender sender, @NonNull String s, String @NonNull [] args) {
+        List<String> results = new ArrayList<>();
+
+        switch (args.length) {
+            case 2 -> {
+                if (!(sender instanceof Player player))
+                    break;
+
+                Grave[] graves = DataHandler.pull(player);
+                results.addAll(Arrays.stream(graves).map(Grave::getId).toList());
+            }
+            case 3 -> {
+                for (Player player : Bukkit.getOnlinePlayers())
+                    results.add(player.getName());
+            }
+        }
+        return results;
+    }
 }

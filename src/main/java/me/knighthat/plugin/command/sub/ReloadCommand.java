@@ -18,22 +18,35 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin.command;
+package me.knighthat.plugin.command.sub;
 
 import lombok.NonNull;
-import me.knighthat.api.command.conditions.PlayerCommand;
-import me.knighthat.api.command.conditions.ReverseHybridTabComplete;
-import me.knighthat.api.command.type.ReverseHybridSubCommand;
-import me.knighthat.plugin.instance.Grave;
-import me.knighthat.plugin.menu.MenuManager;
+import me.knighthat.api.command.SubCommand;
+import me.knighthat.api.command.permission.SinglePermission;
+import me.knighthat.plugin.GraveKeeper;
+import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-public class PeakCommand extends ReverseHybridSubCommand implements PlayerCommand, ReverseHybridTabComplete {
+public class ReloadCommand extends SubCommand implements SinglePermission {
 
     @Override
-    public void execute(@NonNull CommandSender sender, @NonNull Player target, @NonNull Grave grave) {
-        Player player = (Player) sender;
-        player.openInventory(MenuManager.peak(grave));
+    public void dispatch(@NonNull CommandSender sender, String @NonNull [] args) {
+        Messenger.FILE.reload();
+        GraveKeeper.MENU.reload();
+
+        HelpCommand.reload();
+
+        Messenger.send(sender, "reload", null, null, null);
+    }
+
+    @Override
+    public @NonNull String permission() {
+        return super.PERMISSION.concat("reload");
+    }
+
+    @Override
+    public boolean hasPermission(@NotNull CommandSender sender, String @NonNull [] args) {
+        return sender.hasPermission(this.permission());
     }
 }

@@ -20,15 +20,15 @@
 
 package me.knighthat.api.command;
 
-import lombok.NonNull;
-import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
-public abstract class SubCommand {
+public abstract class SubCommand extends PluginCommand {
 
-    public @NonNull String name() {
+    protected final @NotNull String PERMISSION = "grave.command.";
+
+    @Override
+    public @NotNull String name() {
         String className = getClass().getSimpleName().toLowerCase();
         return className.replace("command", "");
     }
-
-    public abstract void execute(@NonNull CommandSender sender, String @NonNull [] args);
 }

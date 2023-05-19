@@ -21,27 +21,26 @@
 package me.knighthat.plugin.file;
 
 import lombok.NonNull;
-import me.knighthat.api.file.PluginFile;
+import me.knighthat.api.file.yaml.YamlFile;
 import me.knighthat.debugger.Debugger;
 import me.knighthat.plugin.GraveKeeper;
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.text.MessageFormat;
 
-public class MenuFile extends PluginFile {
-
-
-    public MenuFile(@NonNull GraveKeeper plugin) {
+public class MenuFile extends YamlFile {
+    public MenuFile(@NotNull GraveKeeper plugin) {
         super(plugin, "menu");
     }
 
     public @Range(from = 0, to = 53) int slot(@NonNull String path, int max) {
-        int slot = super.integer(path);
+        int slot = super.Integer(path);
         if (slot < 1 || slot > max) {
-            Debugger.warn(
-                    MessageFormat.format("{0} returns out of bound number (1 to {1})", path, max)
-            );
+            String warn = "Out of bound number from {0} (1 to {1})";
+            Debugger.warn(MessageFormat.format(warn, path, max));
+
             slot = 1;
         }
         return slot - 1;
@@ -52,11 +51,10 @@ public class MenuFile extends PluginFile {
         try {
             return Material.valueOf(materialString);
         } catch (IllegalArgumentException e) {
-            Debugger.warn(
-                    MessageFormat.format("{0} returns invalid material name", path)
-            );
+            String warn = "{0} returns invalid material name";
+            Debugger.warn(MessageFormat.format(warn, path));
+
             return Material.AIR;
         }
-
     }
 }

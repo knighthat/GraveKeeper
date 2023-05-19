@@ -21,6 +21,7 @@
 package me.knighthat.plugin.instance;
 
 import lombok.NonNull;
+import me.knighthat.utils.placeholder.OfferPlaceholders;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -32,7 +33,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.UUID;
 
-public final class Coordinates implements Serializable {
+public final class Coordinates implements Serializable, OfferPlaceholders {
 
     @Serial
     private static final long serialVersionUID = 1485169032725408696L;
@@ -72,6 +73,7 @@ public final class Coordinates implements Serializable {
      *
      * @return Pair of %place_holder:[replacement]
      */
+    @Override
     public @NonNull Map<String, String> replacements() {
         Map<String, String> placeholders = new HashMap<>(3);
         if (world != null)

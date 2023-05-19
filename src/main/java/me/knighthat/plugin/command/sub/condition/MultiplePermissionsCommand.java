@@ -18,41 +18,35 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin.command;
+package me.knighthat.plugin.command.sub.condition;
 
-import lombok.NonNull;
-import me.knighthat.api.command.conditions.PlayerCommand;
-import me.knighthat.api.command.conditions.ReverseHybridTabComplete;
-import me.knighthat.api.command.type.ReverseHybridSubCommand;
-import me.knighthat.plugin.instance.Grave;
-import me.knighthat.plugin.message.Messenger;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import me.knighthat.api.command.SubCommand;
+import me.knighthat.api.command.permission.MultiplePermissions;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class TeleportCommand extends ReverseHybridSubCommand implements PlayerCommand, ReverseHybridTabComplete {
+public abstract class MultiplePermissionsCommand extends SubCommand implements MultiplePermissions {
 
     @Override
-    public void execute(@NonNull CommandSender sender, @NonNull Player target, @NonNull Grave grave) {
-        Player player = (Player) sender;
+    public @NotNull String selfPermission() {
+        return this.permission("self");
+    }
 
-        Location destination = grave.getCoordinates().get().add(.5d, 1d, .5d);
-        destination.setPitch(90f);
+    @Override
+    public @NotNull String globalPermission() {
+        return this.permission("players");
+    }
 
-        boolean isSafe = true;
-        for (int i = 1; i <= 2; i++) {
-            Location clone = destination.clone();
-            isSafe = clone.add(0d, i, 0d).getBlock().getType().equals(Material.AIR);
-        }
+    private @NotNull String permission(@NotNull String type) {
+        return "grave.command." + super.name() + "." + type;
+    }
 
-        String path = "teleport_not_safe";
+    protected boolean hasPermission(@NotNull CommandSender sender, @Nullable Player target) {
+        boolean hasSelfPerm = target == sender && sender.hasPermission(this.selfPermission());
+        boolean hasGlobalPerm = target != sender && sender.hasPermission(this.globalPermission());
 
-        if (isSafe) {
-            player.teleport(destination);
-            path = "teleport_message";
-        }
-
-        Messenger.send(sender, path, target, grave, null);
+        return target != null && target.isOnline() && (hasSelfPerm || hasGlobalPerm);
     }
 }

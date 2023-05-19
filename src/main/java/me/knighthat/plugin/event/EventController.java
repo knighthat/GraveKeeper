@@ -20,7 +20,6 @@
 
 package me.knighthat.plugin.event;
 
-import me.knighthat.api.menu.InteractableMenu;
 import me.knighthat.utils.Validation;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -29,9 +28,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -65,12 +62,5 @@ public class EventController implements Listener {
                 GraveRetrievalEventHandler.process(event.getPlayer(), block);
             }
         }
-    }
-
-    @EventHandler
-    public void playerClicksInventory(InventoryClickEvent event) {
-        Inventory inventory = event.getView().getTopInventory();
-        if (inventory.getHolder() instanceof InteractableMenu menu)
-            menu.onClick(event);
     }
 }

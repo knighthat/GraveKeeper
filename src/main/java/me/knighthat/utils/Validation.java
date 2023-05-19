@@ -20,7 +20,7 @@
 
 package me.knighthat.utils;
 
-import me.knighthat.api.persistent.DataHandler;
+import me.knighthat.plugin.persistent.DataHandler;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
 import org.bukkit.persistence.PersistentDataType;

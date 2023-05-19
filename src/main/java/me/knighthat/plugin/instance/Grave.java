@@ -23,6 +23,7 @@ package me.knighthat.plugin.instance;
 import lombok.Data;
 import lombok.NonNull;
 import me.knighthat.utils.Validation;
+import me.knighthat.utils.placeholder.OfferPlaceholders;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -34,7 +35,7 @@ import java.io.Serializable;
 import java.util.*;
 
 @Data
-public final class Grave implements Serializable {
+public final class Grave implements Serializable, OfferPlaceholders {
 
     @Serial
     private static final long serialVersionUID = 1485169032725408696L;
@@ -132,6 +133,7 @@ public final class Grave implements Serializable {
      *
      * @return Pair of %place_holder:[replacement]
      */
+    @Override
     public @NonNull Map<String, String> replacements() {
         Map<String, String> placeholders = new HashMap<>(0);
 

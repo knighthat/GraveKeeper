@@ -22,6 +22,7 @@ package me.knighthat.plugin.instance;
 
 import lombok.NonNull;
 import lombok.Setter;
+import me.knighthat.utils.placeholder.OfferPlaceholders;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +38,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 @Setter
-public final class Content implements Serializable {
+public final class Content implements Serializable, OfferPlaceholders {
 
     @Serial
     private static final long serialVersionUID = 5497077563272859582L;
@@ -85,6 +86,7 @@ public final class Content implements Serializable {
      *
      * @return Pair of %place_holder:[replacement]
      */
+    @Override
     public @NonNull Map<String, String> replacements() {
         StringJoiner joiner = new StringJoiner(",", "[", "]");
         this.items.forEach((s, i) -> {

@@ -21,20 +21,27 @@
 package me.knighthat.plugin.message;
 
 import lombok.NonNull;
-import me.knighthat.api.message.Click;
-import me.knighthat.api.message.Hover;
+import me.knighthat.KnightHatAPI;
+import me.knighthat.api.message.InteractiveMessage;
+import me.knighthat.api.message.PlainTextMessage;
 import me.knighthat.api.message.PluginMessage;
-import me.knighthat.plugin.command.HelpCommand;
+import me.knighthat.api.style.hex.AdventureHex;
+import me.knighthat.debugger.Debugger;
+import me.knighthat.plugin.command.sub.HelpCommand;
 import me.knighthat.plugin.file.MessageFile;
 import me.knighthat.plugin.instance.Grave;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,23 +51,44 @@ public class Messenger {
     public static final boolean isPaper = Bukkit.getServer().getName().equals("Paper");
 
     public static MessageFile FILE;
+    public static BukkitAudiences AUDIENCES;
 
-    public static <T extends PluginMessage<?>> void send(@NonNull CommandSender to, @NonNull T message) {
-        if (message instanceof PaperMessage pMessage) {
-            to.sendMessage(pMessage.build());
-        } else if (message instanceof SpigotMessage sMessage) {
-            to.spigot().sendMessage(sMessage.build());
+    public static <T extends PluginMessage> void send(@NotNull CommandSender to, @NotNull T messageInstance) {
+        Component message = messageInstance.build();
+
+        if (AUDIENCES == null) {
+            String err = "Cannot send message %s", cause = "%s has not been initialized in %s";
+            String wanted = BukkitAudiences.class.getName(), thisClass = Messenger.class.getName();
+
+            err = String.format(err, AdventureHex.text(message));
+            cause = String.format(cause, wanted, thisClass);
+
+            Debugger.err(err, cause);
+            return;
         }
+
+        Audience audience = to instanceof Player player ? AUDIENCES.player(player) : AUDIENCES.console();
+        messageInstance.send(audience);
     }
 
-    public static @NonNull String message(@NonNull String path, @Nullable Map<String, String> replacements) {
-        String fromFile = FILE.message(path);
+    public static <T extends PluginMessage> void send(
+            @NotNull CommandSender to,
+            @NotNull T messageInstance,
+            @Nullable Player player,
+            @Nullable Grave grave,
+            @Nullable Map<String, String> additions
+    ) {
+        if (player != null) {
+            if (KnightHatAPI.IS_PAPER)
+                messageInstance.postBuildReplace("%player_display", player.displayName());
+            else
+                messageInstance.replace("%player_display", player.getDisplayName());
+            messageInstance.replace("%player", player.getName());
+        }
+        if (grave != null) messageInstance.replace(grave.replacements());
+        if (additions != null) messageInstance.replace(additions);
 
-        if (replacements != null)
-            for (Map.Entry<String, String> entry : replacements.entrySet())
-                fromFile = fromFile.replace(entry.getKey(), entry.getValue());
-
-        return fromFile;
+        send(to, messageInstance);
     }
 
     /**
@@ -70,62 +98,40 @@ public class Messenger {
      * Finally, creates a Message instance
      * to send to player.
      *
-     * @param to              Recipient of the message
-     * @param messagePath     Reference path from "message.yml"
-     * @param player          Whose name will be replaced
-     * @param grave           Grave instance
-     * @param addReplacements Additional replacements
+     * @param to          Recipient of the message
+     * @param messagePath Reference path from "message.yml"
+     * @param player      Whose name will be replaced
+     * @param grave       Grave instance
+     * @param additions   Additional replacements
      */
-    public static void send(@NonNull CommandSender to, @NonNull String messagePath, @Nullable Player player, @Nullable Grave grave, @Nullable Map<String, String> addReplacements) {
-        Map<String, String> replacements = new HashMap<>();
-        if (addReplacements != null)
-            replacements.putAll(addReplacements);
-        if (grave != null)
-            replacements.putAll(grave.replacements());
-
-        String messageStr = message(messagePath, replacements);
-
-        if (isPaper) {
-            PaperMessage message = new PaperMessage(messageStr);
-
-            if (player != null) {
-                message.replace("%player_display", player.displayName());
-                message.replace("%player", player.name());
-            }
-
-            send(to, message);
-        } else {
-            SpigotMessage message = new SpigotMessage(messageStr);
-
-            if (player != null) {
-                message.replace("%player_display", new TextComponent(player.getDisplayName()));
-                message.replace("%player", new TextComponent(player.getName()));
-            }
-
-            send(to, message);
-        }
+    public static void send(
+            @NotNull CommandSender to,
+            @NotNull String messagePath,
+            @Nullable Player player,
+            @Nullable Grave grave,
+            @Nullable Map<String, String> additions
+    ) {
+        PlainTextMessage message = new PlainTextMessage(FILE.message(messagePath));
+        send(to, message, player, grave, additions);
     }
 
-    public static void sendDeathMessage(@NonNull Player to, @NonNull Grave grave) {
-        String messageStr = message("death_message", grave.replacements());
-        PluginMessage<?> message =
-                isPaper ? new PaperMessage(messageStr) : new SpigotMessage(messageStr);
-
+    public static void send(@NotNull CommandSender to, @NotNull String messagePath) {
+        PlainTextMessage message = new PlainTextMessage(FILE.message(messagePath));
         send(to, message);
     }
 
     public static void sendIdList(@NonNull CommandSender to, @NonNull Player target, @NonNull Grave... graves) {
-        List<PluginMessage<?>> messages = new ArrayList<>(graves.length);
+        List<PluginMessage> messages = new ArrayList<>(graves.length);
 
         for (Grave grave : graves) {
-            String messageStr = " - " + grave.getId();
-            Hover hover = new Hover(Hover.Action.SHOW_TEXT, "Left-click to open grave");
-            Click click = new Click(Click.Action.OPEN_MENU, grave);
+            InteractiveMessage message = new InteractiveMessage(" - " + grave.getId());
 
-            messages.add(isPaper ?
-                    new PaperMessage(messageStr, hover, click) :
-                    new SpigotMessage(messageStr, hover, click)
-            );
+            Component hoverMessage = AdventureHex.parse("Left-click to open grave");
+            message.setHoverEvent(HoverEvent.showText(hoverMessage));
+            String command = "/grave peak " + grave.getId();
+            message.setClickEvent(ClickEvent.runCommand(command));
+
+            messages.add(message);
         }
         String path = to == target ? "self_graves" : "player_graves";
         send(to, path, target, null, null);
@@ -136,15 +142,13 @@ public class Messenger {
     public static void sendCommandHelp(@NonNull CommandSender to, @NonNull String header, @NonNull String footer, @NonNull List<HelpCommand.HelpTemplate> templates) {
         if (templates.size() == 0) return;
 
-        List<PluginMessage<?>> messages = new ArrayList<>(templates.size() + 2);
-        // Add header to the front
-        messages.add(isPaper ? new PaperMessage(header) : new SpigotMessage(header));
-        // Add command usage, permission(s), description
-        templates.stream().map(HelpCommand.HelpTemplate::toString).forEach(t ->
-                messages.add(isPaper ? new PaperMessage(t) : new SpigotMessage(t))
-        );
-        // Add footer to the end
-        messages.add(isPaper ? new PaperMessage(header) : new SpigotMessage(footer));
+        List<PluginMessage> messages = new ArrayList<>(templates.size() + 2);
+        messages.add(new PlainTextMessage(header));
+        messages.add(new PlainTextMessage(footer));
+        templates.forEach(msg -> {
+            int beforeLast = messages.size() - 1;
+            messages.add(beforeLast, new PlainTextMessage(msg.toString()));
+        });
 
         messages.forEach(msg -> send(to, msg));
     }

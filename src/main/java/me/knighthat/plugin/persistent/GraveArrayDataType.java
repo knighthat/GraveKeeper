@@ -18,14 +18,20 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.message;
+package me.knighthat.plugin.persistent;
 
-import lombok.NonNull;
+import me.knighthat.api.persistent.CustomPersistentDataType;
+import me.knighthat.plugin.instance.Grave;
+import org.jetbrains.annotations.NotNull;
 
-public record Hover(@NonNull Action action, @NonNull Object value) {
+public class GraveArrayDataType extends CustomPersistentDataType<Grave[]> {
 
+    protected GraveArrayDataType() {
+        super(new Grave[0]);
+    }
 
-    public enum Action {
-        SHOW_TEXT
+    @Override
+    public @NotNull Class<Grave[]> getComplexType() {
+        return Grave[].class;
     }
 }
