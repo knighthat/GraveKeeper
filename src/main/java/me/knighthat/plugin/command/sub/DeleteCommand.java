@@ -18,13 +18,25 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.menu;
+package me.knighthat.plugin.command.sub;
 
-import lombok.NonNull;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import me.knighthat.plugin.command.tabcomplete.HybridTabComplete;
+import me.knighthat.plugin.command.type.HybridSubCommand;
+import me.knighthat.plugin.instance.Grave;
+import me.knighthat.plugin.message.Messenger;
+import me.knighthat.plugin.persistent.DataHandler;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-@FunctionalInterface
-public interface InteractableMenu {
+public class DeleteCommand extends HybridSubCommand implements HybridTabComplete {
 
-    void onClick(@NonNull InventoryClickEvent event);
+    @Override
+    public void dispatch(@NotNull CommandSender sender, @NotNull Player target, @NotNull Grave grave) {
+        DataHandler.remove(target, grave.getId());
+        grave.remove();
+
+        String path = target == sender ? "self_delete" : "player_delete";
+        Messenger.send(sender, path, target, grave, null);
+    }
 }

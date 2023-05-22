@@ -18,25 +18,43 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin.command;
+package me.knighthat.plugin.command.sub;
 
 import lombok.NonNull;
-import me.knighthat.api.command.conditions.ReverseHybridTabComplete;
-import me.knighthat.api.command.type.ReverseHybridSubCommand;
-import me.knighthat.api.persistent.DataHandler;
+import me.knighthat.api.command.tabcomplete.TabCompleter;
+import me.knighthat.plugin.command.type.PlayerSubCommand;
 import me.knighthat.plugin.instance.Grave;
 import me.knighthat.plugin.message.Messenger;
+import me.knighthat.plugin.persistent.DataHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-public class DeleteCommand extends ReverseHybridSubCommand implements ReverseHybridTabComplete {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ListCommand extends PlayerSubCommand implements TabCompleter {
 
     @Override
-    public void execute(@NonNull CommandSender sender, @NonNull Player target, @NonNull Grave grave) {
-        DataHandler.remove(target, grave.getId());
-        grave.remove();
+    public void dispatch(@NotNull CommandSender sender, @NotNull Player target, String @NotNull [] args) {
+        Grave[] graves = DataHandler.pull(target);
+        if (graves.length == 0) {
+            String path = target == sender ? "self_graves_empty" : "player_graves_empty";
+            Messenger.send(sender, path, target, null, null);
+            return;
+        }
+        Messenger.sendIdList(sender, target, graves);
+    }
 
-        String path = target == sender ? "self_delete" : "player_delete";
-        Messenger.send(sender, path, target, grave, null);
+    @Override
+    public @NonNull List<String> tabComplete(@NonNull CommandSender sender, @NonNull String s, String @NonNull [] args) {
+        List<String> results = new ArrayList<>();
+
+        if (args.length == 3 && sender.hasPermission(super.globalPermission()))
+            for (Player player : Bukkit.getOnlinePlayers())
+                results.add(player.getName());
+
+        return results;
     }
 }

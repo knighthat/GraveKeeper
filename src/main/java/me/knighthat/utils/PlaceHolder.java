@@ -18,13 +18,22 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.command.conditions;
+package me.knighthat.utils;
 
-import lombok.NonNull;
-import me.knighthat.api.command.PermissionStatus;
-import org.bukkit.command.CommandSender;
+import me.knighthat.utils.placeholder.OfferPlaceholders;
+import me.knighthat.utils.placeholder.SwapPlaceholder;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public interface MultiplePermissions {
+public class PlaceHolder extends SwapPlaceholder {
 
-    @NonNull PermissionStatus hasPermission(@NonNull CommandSender sender, String @NonNull [] args);
+    public static @NotNull String replace ( @NotNull String original, @NotNull Player player ) {
+        return replace(original, "%player", player.getName());
+    }
+
+    public static @NotNull String replace ( @NotNull String original, @Nullable Player player, @NotNull OfferPlaceholders replacements ) {
+        String replaced = player == null ? original : replace(original, player);
+        return replace(replaced, replacements);
+    }
 }

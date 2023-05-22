@@ -18,7 +18,7 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.persistent;
+package me.knighthat.plugin.persistent;
 
 import lombok.NonNull;
 import me.knighthat.plugin.instance.Grave;
@@ -34,7 +34,7 @@ public class DataHandler {
 
     private static final @NonNull Map<UUID, Grave[]> GRAVE_LIST = new HashMap<>();
 
-    private static final @NonNull PersistentDataType<byte[], Grave[]> CHEST = new GraveDataType();
+    private static final @NonNull PersistentDataType<byte[], Grave[]> CHEST = new GraveArrayDataType();
     private static final @NonNull PersistentDataType<String, String> ID = PersistentDataType.STRING;
     public static @NonNull NamespacedKey KEY;
 

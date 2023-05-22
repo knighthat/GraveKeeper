@@ -1,0 +1,40 @@
+# DO NOT modify this, or do it at your own risk.
+version: '${project.version}'
+
+
+
+# A wall sign contains owner's information
+epitaph:
+  enabled: true
+  # Must be wall sign material
+  # OAK_WALL_SIGN, SPRUCE_WALL_SIGN, BIRCH_WALL_SIGN
+  # ACACIA_WALL_SIGN, JUNGLE_WALL_SIGN, DARK_OAK_WALL_SIGN
+  # MANGROVE_WALL_SIGN
+  material: OAK_WALL_SIGN
+  # Limited to first 4 lines 15 character each, any line after will be skipped
+  texts:
+    - "#555555###############"
+    - "&aHere lies"
+    - "%display"
+    - "#555555###############"
+# Requires player to have permission "grave.create"
+# to create a chest at death location.
+require-permission: true
+# How many graves are allowed per person.
+# -1 will disable the limit.
+# Those who have "grave.limit.bypass" will not be effected by this
+maximum-graves: 5
+# How many second until another grave can be created at death
+# Note: Player's inventory will not be saved
+# Players with "grave.cooldown.bypass" will not be effected by this feature
+cool-down: 60
+# How many experience points required to create grave
+# in case inventory is empty.
+# 0 will disable the limit.
+# For more information regarding EXP and LEVELs.
+# Visit: https://minecraft.fandom.com/wiki/Experience#Leveling_up
+minimum-exp: 10
+# When a player dies, plugin will attempt to place a grave
+# on ground below player's death. If "false", grave will be
+# placed at death location, even in the middle of the sky
+grave-always-on-ground: true

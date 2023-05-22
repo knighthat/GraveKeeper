@@ -18,15 +18,31 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.message;
+package me.knighthat.plugin.command.sub;
 
-import lombok.NonNull;
+import me.knighthat.api.command.conditions.PlayerCommand;
+import me.knighthat.debugger.Debugger;
+import me.knighthat.plugin.command.tabcomplete.HybridTabComplete;
+import me.knighthat.plugin.command.type.HybridSubCommand;
+import me.knighthat.plugin.instance.Grave;
+import me.knighthat.plugin.menu.PeakMenu;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-public record Click(@NonNull Action action, @NonNull Object value) {
+public class PeakCommand extends HybridSubCommand implements PlayerCommand, HybridTabComplete {
 
+    @Override
+    public void dispatch(@NotNull CommandSender sender, @NotNull Player target, @NotNull Grave grave) {
+        Player player = (Player) sender;
 
-    public enum Action {
+        PeakMenu menu = PeakMenu.create(grave);
+        if (menu == null) {
+            String cause = "Incorrect menu configuration";
+            Debugger.err(getClass().getName(), cause);
+            return;
+        }
 
-        OPEN_MENU
+        player.openInventory(menu.getInventory());
     }
 }

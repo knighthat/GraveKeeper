@@ -22,9 +22,22 @@ package me.knighthat.plugin.instance;
 
 import lombok.Data;
 import lombok.NonNull;
+import me.knighthat.KnightHatAPI;
+import me.knighthat.api.message.PlainTextMessage;
+import me.knighthat.api.style.hex.SpigotHex;
+import me.knighthat.plugin.GraveKeeper;
 import me.knighthat.utils.Validation;
+import me.knighthat.utils.placeholder.OfferPlaceholders;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.block.data.type.Chest;
+import org.bukkit.block.data.type.WallSign;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
@@ -34,7 +47,7 @@ import java.io.Serializable;
 import java.util.*;
 
 @Data
-public final class Grave implements Serializable {
+public final class Grave implements Serializable, OfferPlaceholders {
 
     @Serial
     private static final long serialVersionUID = 1485169032725408696L;
@@ -47,11 +60,11 @@ public final class Grave implements Serializable {
 
     private @NonNull Material material = Material.CHEST;
 
-    public Grave(@Nullable String id,
-                 @Nullable UUID owner,
-                 @Nullable Location location,
-                 @Nullable Map<Integer, ItemStack> content,
-                 @Range(from = 0, to = Integer.MAX_VALUE) int experience) {
+    public Grave ( @Nullable String id,
+                   @Nullable UUID owner,
+                   @Nullable Location location,
+                   @Nullable Map<Integer, ItemStack> content,
+                   @Range ( from = 0, to = Integer.MAX_VALUE ) int experience ) {
 
         if (id == null) {
             String uuid = UUID.randomUUID().toString();
@@ -75,7 +88,7 @@ public final class Grave implements Serializable {
     /**
      * Creates an invalid Grave instance
      */
-    public Grave() {
+    public Grave () {
         this(null, null, null, null, 0);
     }
 
@@ -87,10 +100,10 @@ public final class Grave implements Serializable {
      * @param content    Player's inventory at death
      * @param experience Player's EXP at death
      */
-    public Grave(@NonNull UUID owner,
-                 @NonNull Location location,
-                 @NonNull Map<Integer, ItemStack> content,
-                 @Range(from = 0, to = Integer.MAX_VALUE) int experience) {
+    public Grave ( @NonNull UUID owner,
+                   @NonNull Location location,
+                   @NonNull Map<Integer, ItemStack> content,
+                   @Range ( from = 0, to = Integer.MAX_VALUE ) int experience ) {
         this(null, owner, location, content, experience);
     }
 
@@ -99,9 +112,15 @@ public final class Grave implements Serializable {
      *
      * @return true if one is found, false otherwise
      */
-    public boolean isValid() {
+    public boolean isValid () {
         Location loc = this.coordinates.get();
         return loc != null && Validation.isGrave(loc.getBlock());
+    }
+
+    public @Nullable Player owner () {
+        if (this.owner == null) return null;
+        Player player = Bukkit.getPlayer(this.owner);
+        return player == null || !player.isOnline() ? null : player;
     }
 
     /**
@@ -109,21 +128,70 @@ public final class Grave implements Serializable {
      *
      * @param material Represents the "Grave"
      */
-    public void place(@NonNull Material material) {
+    public void place ( @NonNull Material material ) {
         Location loc = this.coordinates.get();
         if (loc == null)
             return;
         this.material = material;
         loc.getBlock().setType(material);
+
+        ConfigurationSection section = GraveKeeper.CONFIG.section("epitaph");
+        if (section == null || !section.getBoolean("enabled", false)) return;
+
+        BlockFace facing = ( (Chest) loc.getBlock().getBlockData() ).getFacing();
+        Block adjacent = loc.getBlock().getRelative(facing);
+        if (!adjacent.isEmpty()) return;
+
+        String signPath = section.getName().concat(".material");
+        Material signMaterial = GraveKeeper.CONFIG.material(signPath, Material.OAK_WALL_SIGN);
+        if (!signMaterial.name().endsWith("WALL_SIGN"))
+            signMaterial = Material.OAK_WALL_SIGN;
+        adjacent.setType(signMaterial);
+
+        Player owner = this.owner();
+        List<String> texts = section.getStringList("texts");
+        Sign sign = (Sign) adjacent.getState();
+
+        for (int i = 0 ; i < 4 ; i++) {
+            String line = texts.get(i);
+            PlainTextMessage copy = new PlainTextMessage(line);
+            copy.replace(this);
+
+            if (owner != null) {
+                if (KnightHatAPI.IS_PAPER)
+                    copy.postBuildReplace("%display", owner.displayName());
+                else
+                    copy.replace("%display", owner.getDisplayName());
+                copy.replace("%player", owner.getName());
+            }
+
+            if (KnightHatAPI.IS_PAPER)
+                sign.line(i, copy.build());
+            else
+                sign.setLine(i, SpigotHex.parse(copy.getMessage()));
+        }
+        sign.update();
     }
 
     /**
      * Thanos: *snap*
      * Grave: I don't feel so good
      */
-    public void remove() {
-        if (this.isValid())
-            this.coordinates.get().getBlock().setType(Material.AIR);
+    public boolean remove () {
+        boolean isValid = this.isValid();
+
+        if (isValid) {
+            Block block = this.coordinates.get().getBlock();
+
+            BlockFace facing = ( (Chest) block.getBlockData() ).getFacing();
+            Block front = block.getRelative(facing);
+            if (front.getBlockData() instanceof WallSign)
+                front.setType(Material.AIR);
+
+            block.setType(Material.AIR);
+        }
+
+        return isValid;
     }
 
     /**
@@ -132,7 +200,8 @@ public final class Grave implements Serializable {
      *
      * @return Pair of %place_holder:[replacement]
      */
-    public @NonNull Map<String, String> replacements() {
+    @Override
+    public @NonNull Map<String, String> replacements () {
         Map<String, String> placeholders = new HashMap<>(0);
 
         placeholders.put("%id", this.id);
@@ -149,10 +218,11 @@ public final class Grave implements Serializable {
      * Better comparison algorithm
      *
      * @param obj reference object
+     *
      * @return true if values are similar, otherwise, false.
      */
     @Override
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals ( @Nullable Object obj ) {
         return obj instanceof Grave grave &&
                 grave.isValid() &&
                 grave.getOwner() != null &&
@@ -167,10 +237,10 @@ public final class Grave implements Serializable {
      * @return Grave{id=%id,owner=%owner,coordinates=%coordinates,content=%content,date=%date}
      */
     @Override
-    public String toString() {
+    public String toString () {
         StringJoiner joiner = new StringJoiner(",", "Grave{", "}");
         joiner.add("id=" + this.id);
-        joiner.add("owner=" + (this.owner == null ? "null" : this.owner.toString()));
+        joiner.add("owner=" + ( this.owner == null ? "null" : this.owner.toString() ));
         joiner.add("coordinates=" + this.coordinates);
         joiner.add("content=" + this.content);
         joiner.add("date=" + date);

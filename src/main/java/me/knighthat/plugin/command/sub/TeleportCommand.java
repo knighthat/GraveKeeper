@@ -18,22 +18,41 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.plugin.command;
+package me.knighthat.plugin.command.sub;
 
-import lombok.NonNull;
 import me.knighthat.api.command.conditions.PlayerCommand;
-import me.knighthat.api.command.conditions.ReverseHybridTabComplete;
-import me.knighthat.api.command.type.ReverseHybridSubCommand;
+import me.knighthat.plugin.command.tabcomplete.HybridTabComplete;
+import me.knighthat.plugin.command.type.HybridSubCommand;
 import me.knighthat.plugin.instance.Grave;
-import me.knighthat.plugin.menu.MenuManager;
+import me.knighthat.plugin.message.Messenger;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-public class PeakCommand extends ReverseHybridSubCommand implements PlayerCommand, ReverseHybridTabComplete {
+public class TeleportCommand extends HybridSubCommand implements PlayerCommand, HybridTabComplete {
 
     @Override
-    public void execute(@NonNull CommandSender sender, @NonNull Player target, @NonNull Grave grave) {
+    public void dispatch(@NotNull CommandSender sender, @NotNull Player target, @NotNull Grave grave) {
         Player player = (Player) sender;
-        player.openInventory(MenuManager.peak(grave));
+
+        Location destination = grave.getCoordinates().get().add(.5d, 1d, .5d);
+        destination.setPitch(90f);
+
+        boolean isSafe = true;
+        for (int i = 1; i <= 2; i++) {
+            Location clone = destination.clone();
+            isSafe = clone.add(0d, i, 0d).getBlock().getType().equals(Material.AIR);
+        }
+
+        String path = "teleport_not_safe";
+
+        if (isSafe) {
+            player.teleport(destination);
+            path = "teleport_message";
+        }
+
+        Messenger.send(sender, path, target, grave, null);
     }
 }

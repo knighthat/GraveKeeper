@@ -6,7 +6,7 @@ version: '${project.version}'
 #                                                               #
 #     Available Placeholders:                                   #
 #     - %player         : Player's registered name              #
-#     - %player_display : Player's special name                 #
+#     - %display : Player's special name                 #
 #                                                               #
 #     > Only available on single grave command                  #
 #       | E.g: (peak, delete, teleport)                         #
@@ -33,6 +33,8 @@ reload: "&aPlugin successfully reloaded"
 death_message: "&4&lYou DIED! &eLast death location, &bX:%x Y:%y Z:%z"
 not_owner: "&cYou are not the owner of this chest!"
 retrieve: "&aCongratulations! You've successfully reclaim your chest."
+maximum_graves_met: "&cYou've reached limit of number of graves can be created (%total_graves)"
+cool_down_message: "&dYou still have %second seconds more before crating a new grave"
 
 no_cmd_perm: "&4You don't have permission to execute this command!"
 cmd_requires_player: "&cOnly player can execute this command!"

@@ -18,15 +18,39 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.command.conditions;
+package me.knighthat.plugin.command.sub;
 
 import lombok.NonNull;
+import me.knighthat.api.command.tabcomplete.TabCompleter;
+import me.knighthat.plugin.command.type.PlayerSubCommand;
+import me.knighthat.plugin.message.Messenger;
+import me.knighthat.plugin.persistent.DataHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@FunctionalInterface
-public interface OfferTabComplete {
+public class ResetCommand extends PlayerSubCommand implements TabCompleter {
 
-    @NonNull List<String> onTabComplete(@NonNull CommandSender sender, String @NonNull [] args);
+    @Override
+    public void dispatch(@NotNull CommandSender sender, @NotNull Player target, String @NotNull [] args) {
+        DataHandler.reset(target);
+
+        String path = target == sender ? "self_reset" : "player_reset";
+        Messenger.send(sender, path, target, null, null);
+    }
+
+    @Override
+    public @NonNull List<String> tabComplete(@NonNull CommandSender sender, @NonNull String s, String @NonNull [] args) {
+        List<String> results = new ArrayList<>();
+
+        if (args.length == 3 && sender.hasPermission(super.globalPermission()))
+            for (Player player : Bukkit.getOnlinePlayers())
+                results.add(player.getName());
+
+        return results;
+    }
 }

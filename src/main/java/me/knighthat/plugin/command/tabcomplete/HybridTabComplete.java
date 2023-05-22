@@ -18,14 +18,40 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.message;
+package me.knighthat.plugin.command.tabcomplete;
 
 import lombok.NonNull;
+import me.knighthat.api.command.tabcomplete.TabCompleter;
+import me.knighthat.plugin.instance.Grave;
+import me.knighthat.plugin.persistent.DataHandler;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-public record Hover(@NonNull Action action, @NonNull Object value) {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+public interface HybridTabComplete extends TabCompleter {
 
-    public enum Action {
-        SHOW_TEXT
+    @Override
+    @NonNull
+    default List<String> tabComplete(@NonNull CommandSender sender, @NonNull String s, String @NonNull [] args) {
+        List<String> results = new ArrayList<>();
+
+        switch (args.length) {
+            case 2 -> {
+                if (!(sender instanceof Player player))
+                    break;
+
+                Grave[] graves = DataHandler.pull(player);
+                results.addAll(Arrays.stream(graves).map(Grave::getId).toList());
+            }
+            case 3 -> {
+                for (Player player : Bukkit.getOnlinePlayers())
+                    results.add(player.getName());
+            }
+        }
+        return results;
     }
 }

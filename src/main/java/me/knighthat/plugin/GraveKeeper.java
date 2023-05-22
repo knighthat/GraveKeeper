@@ -20,38 +20,38 @@
 
 package me.knighthat.plugin;
 
-import lombok.NonNull;
-import me.knighthat.api.command.CommandManager;
-import me.knighthat.api.persistent.DataHandler;
-import me.knighthat.debugger.Debugger;
+import me.knighthat.KnightHatAPI;
+import me.knighthat.plugin.command.CommandManager;
 import me.knighthat.plugin.event.EventController;
+import me.knighthat.plugin.file.ConfigFile;
 import me.knighthat.plugin.file.MenuFile;
 import me.knighthat.plugin.file.MessageFile;
-import me.knighthat.plugin.menu.MenuManager;
 import me.knighthat.plugin.message.Messenger;
+import me.knighthat.plugin.persistent.DataHandler;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class GraveKeeper extends JavaPlugin {
 
-    public static @NonNull GraveKeeper INSTANCE;
+    public static GraveKeeper INSTANCE;
 
-    {
-        INSTANCE = this;
-
-        DataHandler.KEY = new NamespacedKey(this, getDescription().getName());
-
-        Debugger.FALLBACK = this.getLogger();
-        if (Messenger.isPaper)
-            Debugger.LOGGER = this.getSLF4JLogger();
-
-        Messenger.FILE = new MessageFile(this);
-        MenuManager.FILE = new MenuFile(this);
-    }
+    public static MenuFile MENU;
+    public static ConfigFile CONFIG;
 
     @Override
     public void onEnable() {
+        INSTANCE = this;
+
+        KnightHatAPI.init(this);
+
+        DataHandler.KEY = new NamespacedKey(this, getDescription().getName());
+
+        CONFIG = new ConfigFile(this);
+        Messenger.FILE = new MessageFile(this);
+        Messenger.AUDIENCES = BukkitAudiences.create(this);
+        MENU = new MenuFile(this);
 
         // Register event handler to Server
         getServer().getPluginManager().registerEvents(new EventController(), this);

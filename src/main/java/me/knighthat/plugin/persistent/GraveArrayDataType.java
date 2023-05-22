@@ -18,21 +18,20 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.command.conditions;
+package me.knighthat.plugin.persistent;
 
-import lombok.NonNull;
-import me.knighthat.api.command.PermissionStatus;
-import org.bukkit.command.CommandSender;
+import me.knighthat.api.persistent.CustomPersistentDataType;
+import me.knighthat.plugin.instance.Grave;
+import org.jetbrains.annotations.NotNull;
 
-public interface SinglePermission {
+public class GraveArrayDataType extends CustomPersistentDataType<Grave[]> {
 
-    @NonNull String name();
-
-    default @NonNull String permission() {
-        return "grave.command." + name();
+    protected GraveArrayDataType() {
+        super(new Grave[0]);
     }
 
-    default PermissionStatus hasPermission(@NonNull CommandSender sender) {
-        return sender.hasPermission(permission()) ? PermissionStatus.PASSED : PermissionStatus.NO_PERMISSION;
+    @Override
+    public @NotNull Class<Grave[]> getComplexType() {
+        return Grave[].class;
     }
 }

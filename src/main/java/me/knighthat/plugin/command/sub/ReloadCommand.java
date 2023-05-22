@@ -18,21 +18,36 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.style;
+package me.knighthat.plugin.command.sub;
 
 import lombok.NonNull;
-import org.bukkit.ChatColor;
+import me.knighthat.api.command.SubCommand;
+import me.knighthat.api.command.permission.SinglePermission;
+import me.knighthat.plugin.GraveKeeper;
+import me.knighthat.plugin.message.Messenger;
+import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
-public interface Colorization {
+public class ReloadCommand extends SubCommand implements SinglePermission {
 
-    /**
-     * Using org.bukkit.ChatColor to replace all '&' characters
-     * with '§' characters to create colors.
-     *
-     * @param text String to be converted
-     * @return new string with color(s)
-     */
-    static @NonNull String color(@NonNull String text) {
-        return ChatColor.translateAlternateColorCodes('&', text);
+    @Override
+    public void dispatch(@NonNull CommandSender sender, String @NonNull [] args) {
+        Messenger.FILE.reload();
+        GraveKeeper.MENU.reload();
+        GraveKeeper.CONFIG.reload();
+
+        HelpCommand.reload();
+
+        Messenger.send(sender, "reload", null, null, null);
+    }
+
+    @Override
+    public @NonNull String permission() {
+        return super.PERMISSION.concat("reload");
+    }
+
+    @Override
+    public boolean hasPermission(@NotNull CommandSender sender, String @NonNull [] args) {
+        return sender.hasPermission(this.permission());
     }
 }

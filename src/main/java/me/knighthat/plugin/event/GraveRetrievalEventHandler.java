@@ -21,9 +21,9 @@
 package me.knighthat.plugin.event;
 
 import lombok.NonNull;
-import me.knighthat.api.persistent.DataHandler;
 import me.knighthat.plugin.instance.Grave;
 import me.knighthat.plugin.message.Messenger;
+import me.knighthat.plugin.persistent.DataHandler;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
@@ -36,15 +36,14 @@ public class GraveRetrievalEventHandler {
      * @param who     Person interacted with "grave"
      * @param clicked Block got interacted
      */
-    public static void process(@NonNull Player who, @NonNull Block clicked) {
+    public static void process ( @NonNull Player who, @NonNull Block clicked ) {
         String id = DataHandler.pull((TileState) clicked.getState());
         Grave grave = DataHandler.get(who, id);
 
-        boolean isValid = grave.isValid();
+        boolean isValid = grave.remove();
         if (isValid) {
             DataHandler.remove(who, id);
             grave.getContent().giveTo(who);
-            grave.remove();
         }
 
         String path = isValid ? "retrieve" : "not_owner";

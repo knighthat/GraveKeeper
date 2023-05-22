@@ -6,7 +6,7 @@
 
     <groupId>me.knighthat</groupId>
     <artifactId>plugin</artifactId>
-    <version>0.7</version>
+    <version>0.8</version>
     <packaging>jar</packaging>
 
     <name>GraveKeeper</name>
@@ -30,11 +30,20 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <finalName>${project.name}-${project.version}</finalName>
-                </configuration>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${project.name}-${project.version}</finalName>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <resources>
@@ -68,12 +77,6 @@
     </repositories>
 
     <dependencies>
-        <!--        <dependency>-->
-        <!--            <groupId>org.spigotmc</groupId>-->
-        <!--            <artifactId>spigot-api</artifactId>-->
-        <!--            <version>1.19.4-R0.1-SNAPSHOT</version>-->
-        <!--            <scope>provided</scope>-->
-        <!--        </dependency>-->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
@@ -84,6 +87,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.26</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -95,6 +99,12 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>24.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.knighthat</groupId>
+            <artifactId>api</artifactId>
+            <version>0.1</version>
         </dependency>
     </dependencies>
 </project>
