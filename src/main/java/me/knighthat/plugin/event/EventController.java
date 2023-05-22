@@ -35,21 +35,22 @@ import java.util.List;
 
 public class EventController implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerDeath(PlayerDeathEvent event) {
+    @EventHandler ( priority = EventPriority.LOWEST )
+    public void onPlayerDeath ( PlayerDeathEvent event ) {
         Player player = event.getEntity();
-        List<ItemStack> drops = event.getDrops();
 
+        if (!PlayerDeathEventHandler.process(player)) return;
+
+        List<ItemStack> drops = event.getDrops();
         if (drops.isEmpty() && event.getDroppedExp() == 0)
             return;
 
-        PlayerDeathEventHandler.process(player);
         event.setDroppedExp(0);
         drops.removeIf(drop -> !drop.getType().equals(Material.AIR));
     }
 
     @EventHandler
-    public void playerInteractWithGrave(PlayerInteractEvent event) {
+    public void playerInteractWithGrave ( PlayerInteractEvent event ) {
         Block block = event.getClickedBlock();
 
         switch (event.getAction()) {

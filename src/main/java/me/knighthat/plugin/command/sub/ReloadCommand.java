@@ -34,6 +34,7 @@ public class ReloadCommand extends SubCommand implements SinglePermission {
     public void dispatch(@NonNull CommandSender sender, String @NonNull [] args) {
         Messenger.FILE.reload();
         GraveKeeper.MENU.reload();
+        GraveKeeper.CONFIG.reload();
 
         HelpCommand.reload();
 

@@ -25,6 +25,7 @@ import me.knighthat.KnightHatAPI;
 import me.knighthat.api.message.InteractiveMessage;
 import me.knighthat.api.message.PlainTextMessage;
 import me.knighthat.api.message.PluginMessage;
+import me.knighthat.api.style.Color;
 import me.knighthat.api.style.hex.AdventureHex;
 import me.knighthat.debugger.Debugger;
 import me.knighthat.plugin.command.sub.HelpCommand;
@@ -45,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings ( "deprecation" )
 public class Messenger {
 
     public static final boolean isPaper = Bukkit.getServer().getName().equals("Paper");
@@ -53,14 +54,14 @@ public class Messenger {
     public static MessageFile FILE;
     public static BukkitAudiences AUDIENCES;
 
-    public static <T extends PluginMessage> void send(@NotNull CommandSender to, @NotNull T messageInstance) {
+    public static <T extends PluginMessage> void send ( @NotNull CommandSender to, @NotNull T messageInstance ) {
         Component message = messageInstance.build();
 
         if (AUDIENCES == null) {
             String err = "Cannot send message %s", cause = "%s has not been initialized in %s";
             String wanted = BukkitAudiences.class.getName(), thisClass = Messenger.class.getName();
 
-            err = String.format(err, AdventureHex.text(message));
+            err = String.format(err, Color.serialize(message));
             cause = String.format(cause, wanted, thisClass);
 
             Debugger.err(err, cause);
@@ -71,7 +72,7 @@ public class Messenger {
         messageInstance.send(audience);
     }
 
-    public static <T extends PluginMessage> void send(
+    public static <T extends PluginMessage> void send (
             @NotNull CommandSender to,
             @NotNull T messageInstance,
             @Nullable Player player,
@@ -80,9 +81,9 @@ public class Messenger {
     ) {
         if (player != null) {
             if (KnightHatAPI.IS_PAPER)
-                messageInstance.postBuildReplace("%player_display", player.displayName());
+                messageInstance.postBuildReplace("%display", player.displayName());
             else
-                messageInstance.replace("%player_display", player.getDisplayName());
+                messageInstance.replace("%display", player.getDisplayName());
             messageInstance.replace("%player", player.getName());
         }
         if (grave != null) messageInstance.replace(grave.replacements());
@@ -104,7 +105,7 @@ public class Messenger {
      * @param grave       Grave instance
      * @param additions   Additional replacements
      */
-    public static void send(
+    public static void send (
             @NotNull CommandSender to,
             @NotNull String messagePath,
             @Nullable Player player,
@@ -115,12 +116,12 @@ public class Messenger {
         send(to, message, player, grave, additions);
     }
 
-    public static void send(@NotNull CommandSender to, @NotNull String messagePath) {
+    public static void send ( @NotNull CommandSender to, @NotNull String messagePath ) {
         PlainTextMessage message = new PlainTextMessage(FILE.message(messagePath));
         send(to, message);
     }
 
-    public static void sendIdList(@NonNull CommandSender to, @NonNull Player target, @NonNull Grave... graves) {
+    public static void sendIdList ( @NonNull CommandSender to, @NonNull Player target, @NonNull Grave... graves ) {
         List<PluginMessage> messages = new ArrayList<>(graves.length);
 
         for (Grave grave : graves) {
@@ -139,7 +140,7 @@ public class Messenger {
         messages.forEach(msg -> send(to, msg));
     }
 
-    public static void sendCommandHelp(@NonNull CommandSender to, @NonNull String header, @NonNull String footer, @NonNull List<HelpCommand.HelpTemplate> templates) {
+    public static void sendCommandHelp ( @NonNull CommandSender to, @NonNull String header, @NonNull String footer, @NonNull List<HelpCommand.HelpTemplate> templates ) {
         if (templates.size() == 0) return;
 
         List<PluginMessage> messages = new ArrayList<>(templates.size() + 2);

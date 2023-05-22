@@ -20,13 +20,20 @@
 
 package me.knighthat.utils;
 
+import me.knighthat.utils.placeholder.OfferPlaceholders;
 import me.knighthat.utils.placeholder.SwapPlaceholder;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PlaceHolder extends SwapPlaceholder {
 
-    public static @NotNull String replace(@NotNull String original, @NotNull Player player) {
+    public static @NotNull String replace ( @NotNull String original, @NotNull Player player ) {
         return replace(original, "%player", player.getName());
+    }
+
+    public static @NotNull String replace ( @NotNull String original, @Nullable Player player, @NotNull OfferPlaceholders replacements ) {
+        String replaced = player == null ? original : replace(original, player);
+        return replace(replaced, replacements);
     }
 }

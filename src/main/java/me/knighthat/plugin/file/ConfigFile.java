@@ -20,22 +20,39 @@
 
 package me.knighthat.plugin.file;
 
+import lombok.NonNull;
 import me.knighthat.api.file.yaml.YamlFile;
 import me.knighthat.plugin.GraveKeeper;
+import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public class MessageFile extends YamlFile {
+import java.util.List;
 
-    public MessageFile ( @NotNull GraveKeeper plugin ) {
-        super(plugin, "messages");
+public class ConfigFile extends YamlFile {
+
+    public ConfigFile ( @NonNull GraveKeeper plugin ) {
+        super(plugin, "config");
     }
 
-    public @NotNull String prefix () {
-        return super.string("prefix");
+    public static @NotNull String replacePlaceholder ( @NotNull String original ) {
+        return original.replace("%player_display", "%display");
     }
 
-    public @NotNull String message ( @NotNull String path ) {
-        return prefix().concat(super.string(path));
+    public @NotNull Material material ( @NotNull String path ) {
+        return this.material(path, Material.AIR);
+    }
+
+    public @NotNull Material material ( @NotNull String path, @NotNull Material def ) {
+        Material material = def;
+        for (Material m : Material.values())
+            if (m.name().equalsIgnoreCase(super.string(path)))
+                material = m;
+        return material;
+    }
+
+    public long cooldown () {
+        //    Millis * Seconds
+        return 1000L * super.Long("cool-down");
     }
 
     @Override
@@ -52,7 +69,10 @@ public class MessageFile extends YamlFile {
         for (String key : get().getKeys(true))
             if (get().isString(key)) {
                 String value = super.string(key);
-                super.write(key, ConfigFile.replacePlaceholder(value), false);
+                super.write(key, replacePlaceholder(value), false);
+            } else if (get().isList(key)) {
+                List<String> newList = super.list(key).stream().map(ConfigFile::replacePlaceholder).toList();
+                super.write(key, newList, false);
             }
         super.save();
     }

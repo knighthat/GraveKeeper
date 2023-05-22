@@ -23,6 +23,7 @@ package me.knighthat.plugin;
 import me.knighthat.KnightHatAPI;
 import me.knighthat.plugin.command.CommandManager;
 import me.knighthat.plugin.event.EventController;
+import me.knighthat.plugin.file.ConfigFile;
 import me.knighthat.plugin.file.MenuFile;
 import me.knighthat.plugin.file.MessageFile;
 import me.knighthat.plugin.message.Messenger;
@@ -31,13 +32,13 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 public final class GraveKeeper extends JavaPlugin {
 
-    public static @NotNull GraveKeeper INSTANCE;
+    public static GraveKeeper INSTANCE;
 
-    public static @NotNull MenuFile MENU;
+    public static MenuFile MENU;
+    public static ConfigFile CONFIG;
 
     @Override
     public void onEnable() {
@@ -46,6 +47,8 @@ public final class GraveKeeper extends JavaPlugin {
         KnightHatAPI.init(this);
 
         DataHandler.KEY = new NamespacedKey(this, getDescription().getName());
+
+        CONFIG = new ConfigFile(this);
         Messenger.FILE = new MessageFile(this);
         Messenger.AUDIENCES = BukkitAudiences.create(this);
         MENU = new MenuFile(this);
