@@ -28,6 +28,12 @@ PLUGIN IS CURRENTLY IN EARLY STAGE. MORE FEATURES WILL BE ADDED
     - [**Delete**](https://github.com/knighthat/GraveKeeper/wiki/Commands#Delete)
     - [**Reset**](https://github.com/knighthat/GraveKeeper/wiki/Commands#Reset)
     - [**Teleport**](https://github.com/knighthat/GraveKeeper/wiki/Commands#Teleport)
+- Epitaph
+- Chat interaction for specific commands (e.g. List)
+- Limit number of graves can be created per player
+- Cool down before creating another grave at death
+- Grave requires permission to be created upon death
+- Force grave to be created on ground
 
 ## Installation
 
