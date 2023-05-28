@@ -44,13 +44,23 @@ public class ConfigFile extends YamlFile {
 
     public @NotNull Material material ( @NotNull String path, @NotNull Material def ) {
         Material material = def;
+        String fromFile = super.string(path);
         for (Material m : Material.values())
-            if (m.name().equalsIgnoreCase(super.string(path)))
+            if (fromFile.equalsIgnoreCase(m.name()))
                 material = m;
         return material;
     }
 
-    public long cooldown () {
+    public @NotNull Material wallSign () {
+        Material fromFile = this.material("epitaph.material");
+        return fromFile.name().endsWith("WALL_SIGN") ? fromFile : Material.OAK_WALL_SIGN;
+    }
+
+    public @NotNull List<String> epitaph () {
+        return super.list("epitaph.texts");
+    }
+
+    public long coolDown () {
         //    Millis * Seconds
         return 1000L * super.Long("cool-down");
     }

@@ -98,7 +98,7 @@ public class PlayerDeathEventHandler {
     }
 
     private static void setTimer ( UUID uuid ) {
-        long cd = System.currentTimeMillis() + GraveKeeper.CONFIG.cooldown();
+        long cd = System.currentTimeMillis() + GraveKeeper.CONFIG.coolDown();
         COOL_DOWN.put(uuid, cd);
     }
 

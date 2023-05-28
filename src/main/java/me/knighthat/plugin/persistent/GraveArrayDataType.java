@@ -26,12 +26,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class GraveArrayDataType extends CustomPersistentDataType<Grave[]> {
 
-    protected GraveArrayDataType() {
+    protected GraveArrayDataType () {
         super(new Grave[0]);
     }
 
     @Override
-    public @NotNull Class<Grave[]> getComplexType() {
+    public @NotNull Class<Grave[]> getComplexType () {
         return Grave[].class;
     }
 }

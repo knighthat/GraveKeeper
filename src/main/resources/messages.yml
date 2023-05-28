@@ -48,6 +48,8 @@ player_graves_empty: "&d%player doesn't have any grave"
 # List command
 self_graves: "&eHere are your IDs:"
 player_graves: "&e%player's IDs:"
+id_hover: "Left-click to see content"
+id_format: " - %id"
 
 # Delete command
 self_delete: "&7Grave %id is successfully deleted!"

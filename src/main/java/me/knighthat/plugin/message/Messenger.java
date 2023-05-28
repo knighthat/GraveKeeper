@@ -22,11 +22,9 @@ package me.knighthat.plugin.message;
 
 import lombok.NonNull;
 import me.knighthat.KnightHatAPI;
-import me.knighthat.api.message.InteractiveMessage;
 import me.knighthat.api.message.PlainTextMessage;
 import me.knighthat.api.message.PluginMessage;
 import me.knighthat.api.style.Color;
-import me.knighthat.api.style.hex.AdventureHex;
 import me.knighthat.debugger.Debugger;
 import me.knighthat.plugin.command.sub.HelpCommand;
 import me.knighthat.plugin.file.MessageFile;
@@ -34,8 +32,6 @@ import me.knighthat.plugin.instance.Grave;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,10 +46,16 @@ import java.util.Map;
 public class Messenger {
 
     public static final boolean isPaper = Bukkit.getServer().getName().equals("Paper");
-
+    public static final @Nullable BukkitAudiences AUDIENCES = KnightHatAPI.AUDIENCES;
     public static MessageFile FILE;
-    public static BukkitAudiences AUDIENCES;
 
+    /**
+     * Send message to player using subclass of {@link PluginMessage}
+     *
+     * @param to              message receiver
+     * @param messageInstance message to be sent
+     * @param <T>             subclass of {@link PluginMessage}
+     */
     public static <T extends PluginMessage> void send ( @NotNull CommandSender to, @NotNull T messageInstance ) {
         Component message = messageInstance.build();
 
@@ -72,37 +74,15 @@ public class Messenger {
         messageInstance.send(audience);
     }
 
-    public static <T extends PluginMessage> void send (
-            @NotNull CommandSender to,
-            @NotNull T messageInstance,
-            @Nullable Player player,
-            @Nullable Grave grave,
-            @Nullable Map<String, String> additions
-    ) {
-        if (player != null) {
-            if (KnightHatAPI.IS_PAPER)
-                messageInstance.postBuildReplace("%display", player.displayName());
-            else
-                messageInstance.replace("%display", player.getDisplayName());
-            messageInstance.replace("%player", player.getName());
-        }
-        if (grave != null) messageInstance.replace(grave.replacements());
-        if (additions != null) messageInstance.replace(additions);
-
-        send(to, messageInstance);
-    }
-
     /**
-     * Grabs message from MessageFile then
-     * replaces all replacements from Grave,
-     * plus, player's name and display name.
-     * Finally, creates a Message instance
-     * to send to player.
+     * Grabs message from MessageFile then substitute
+     * all the provided placeholders with the condition
+     * that they are {@link NotNull}
      *
      * @param to          Recipient of the message
      * @param messagePath Reference path from "message.yml"
-     * @param player      Whose name will be replaced
-     * @param grave       Grave instance
+     * @param player      whose name will replace player placeholders
+     * @param grave       its values will replace all placeholders
      * @param additions   Additional replacements
      */
     public static void send (
@@ -112,32 +92,20 @@ public class Messenger {
             @Nullable Grave grave,
             @Nullable Map<String, String> additions
     ) {
-        PlainTextMessage message = new PlainTextMessage(FILE.message(messagePath));
-        send(to, message, player, grave, additions);
-    }
+        String fromFile = FILE.message(messagePath);
+        PlainTextMessage message = new PlainTextMessage(fromFile);
 
-    public static void send ( @NotNull CommandSender to, @NotNull String messagePath ) {
-        PlainTextMessage message = new PlainTextMessage(FILE.message(messagePath));
-        send(to, message);
-    }
-
-    public static void sendIdList ( @NonNull CommandSender to, @NonNull Player target, @NonNull Grave... graves ) {
-        List<PluginMessage> messages = new ArrayList<>(graves.length);
-
-        for (Grave grave : graves) {
-            InteractiveMessage message = new InteractiveMessage(" - " + grave.getId());
-
-            Component hoverMessage = AdventureHex.parse("Left-click to open grave");
-            message.setHoverEvent(HoverEvent.showText(hoverMessage));
-            String command = "/grave peak " + grave.getId();
-            message.setClickEvent(ClickEvent.runCommand(command));
-
-            messages.add(message);
+        if (player != null) {
+            if (KnightHatAPI.IS_PAPER)
+                message.postBuildReplace("%display", player.displayName());
+            else
+                message.replace("%display", player.getDisplayName());
+            message.replace("%player", player.getName());
         }
-        String path = to == target ? "self_graves" : "player_graves";
-        send(to, path, target, null, null);
+        if (grave != null) message.replace(grave.replacements());
+        if (additions != null) message.replace(additions);
 
-        messages.forEach(msg -> send(to, msg));
+        send(to, message);
     }
 
     public static void sendCommandHelp ( @NonNull CommandSender to, @NonNull String header, @NonNull String footer, @NonNull List<HelpCommand.HelpTemplate> templates ) {

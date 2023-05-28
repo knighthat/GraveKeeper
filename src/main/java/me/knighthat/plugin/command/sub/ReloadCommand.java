@@ -21,9 +21,9 @@
 package me.knighthat.plugin.command.sub;
 
 import lombok.NonNull;
-import me.knighthat.api.command.SubCommand;
 import me.knighthat.api.command.permission.SinglePermission;
 import me.knighthat.plugin.GraveKeeper;
+import me.knighthat.plugin.command.SubCommand;
 import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 public class ReloadCommand extends SubCommand implements SinglePermission {
 
     @Override
-    public void dispatch(@NonNull CommandSender sender, String @NonNull [] args) {
+    public void dispatch ( @NonNull CommandSender sender, String @NonNull [] args ) {
         Messenger.FILE.reload();
         GraveKeeper.MENU.reload();
         GraveKeeper.CONFIG.reload();
@@ -42,12 +42,12 @@ public class ReloadCommand extends SubCommand implements SinglePermission {
     }
 
     @Override
-    public @NonNull String permission() {
+    public @NonNull String permission () {
         return super.PERMISSION.concat("reload");
     }
 
     @Override
-    public boolean hasPermission(@NotNull CommandSender sender, String @NonNull [] args) {
+    public boolean hasPermission ( @NotNull CommandSender sender, String @NonNull [] args ) {
         return sender.hasPermission(this.permission());
     }
 }

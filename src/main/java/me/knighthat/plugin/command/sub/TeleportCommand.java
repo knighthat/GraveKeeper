@@ -34,14 +34,14 @@ import org.jetbrains.annotations.NotNull;
 public class TeleportCommand extends HybridSubCommand implements PlayerCommand, HybridTabComplete {
 
     @Override
-    public void dispatch(@NotNull CommandSender sender, @NotNull Player target, @NotNull Grave grave) {
+    public void dispatch ( @NotNull CommandSender sender, @NotNull Player target, @NotNull Grave grave ) {
         Player player = (Player) sender;
 
         Location destination = grave.getCoordinates().get().add(.5d, 1d, .5d);
         destination.setPitch(90f);
 
         boolean isSafe = true;
-        for (int i = 1; i <= 2; i++) {
+        for (int i = 1 ; i <= 2 ; i++) {
             Location clone = destination.clone();
             isSafe = clone.add(0d, i, 0d).getBlock().getType().equals(Material.AIR);
         }

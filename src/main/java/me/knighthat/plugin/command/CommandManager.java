@@ -20,7 +20,6 @@
 
 package me.knighthat.plugin.command;
 
-import me.knighthat.api.command.SubCommand;
 import me.knighthat.api.command.conditions.PlayerCommand;
 import me.knighthat.api.command.conditions.Preconditions;
 import me.knighthat.api.command.permission.PermissionCommand;
@@ -54,13 +53,13 @@ public class CommandManager implements TabExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand ( @NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args ) {
         if (args.length == 0) return true;
 
         SubCommand sub = get(args[0]);
         if (sub == null) return true;
 
-        if (sub instanceof PlayerCommand && !(sender instanceof Player)) {
+        if (sub instanceof PlayerCommand && !( sender instanceof Player )) {
             Messenger.send(sender, "cmd_requires_player", null, null, null);
             return true;
         }
@@ -76,7 +75,7 @@ public class CommandManager implements TabExecutor {
         return true;
     }
 
-    private @Nullable SubCommand get(@NotNull String name) {
+    private @Nullable SubCommand get ( @NotNull String name ) {
 
         for (SubCommand sub : SUB_COMMANDS)
             if (sub.name().equalsIgnoreCase(name))
@@ -86,7 +85,7 @@ public class CommandManager implements TabExecutor {
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTabComplete ( @NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args ) {
         List<String> results = new ArrayList<>();
 
         List<SubCommand> available = new ArrayList<>();
@@ -108,7 +107,7 @@ public class CommandManager implements TabExecutor {
         } else
             for (SubCommand sub : available) {
                 if (!sub.name().equalsIgnoreCase(args[0]) ||
-                        (sub instanceof PlayerCommand && !(sender instanceof Player)))
+                        ( sub instanceof PlayerCommand && !( sender instanceof Player ) ))
                     continue;
 
                 if (sub instanceof TabCompleter completer)

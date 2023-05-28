@@ -50,7 +50,7 @@ public final class Coordinates implements Serializable, OfferPlaceholders {
      *
      * @param location Location of the block
      */
-    public void setLocation(@NonNull Location location) {
+    public void setLocation ( @NonNull Location location ) {
         this.world = location.getWorld().getUID();
         this.x = location.getBlockX();
         this.y = location.getBlockY();
@@ -63,7 +63,7 @@ public final class Coordinates implements Serializable, OfferPlaceholders {
      *
      * @return In-game location
      */
-    public @Nullable Location get() {
+    public @Nullable Location get () {
         return world == null ? null :
                 new Location(Bukkit.getWorld(this.world), this.x, this.y, this.z);
     }
@@ -74,7 +74,7 @@ public final class Coordinates implements Serializable, OfferPlaceholders {
      * @return Pair of %place_holder:[replacement]
      */
     @Override
-    public @NonNull Map<String, String> replacements() {
+    public @NonNull Map<String, String> replacements () {
         Map<String, String> placeholders = new HashMap<>(3);
         if (world != null)
             placeholders.put("%world", world.toString());
@@ -89,10 +89,11 @@ public final class Coordinates implements Serializable, OfferPlaceholders {
      * Better comparison algorithm
      *
      * @param obj reference object
+     *
      * @return true if values are similar, otherwise, false.
      */
     @Override
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals ( @Nullable Object obj ) {
         return obj instanceof Coordinates coordinate && coordinate.get() == this.get();
     }
 
@@ -102,9 +103,9 @@ public final class Coordinates implements Serializable, OfferPlaceholders {
      * @return [world=%world,x=%x,y=%y,z=%z]
      */
     @Override
-    public String toString() {
+    public String toString () {
         StringJoiner joiner = new StringJoiner(",", "[", "]");
-        joiner.add("world=" + (world == null ? "null" : world.toString()));
+        joiner.add("world=" + ( world == null ? "null" : world.toString() ));
         joiner.add("x=" + this.x);
         joiner.add("y=" + this.y);
         joiner.add("z=" + this.z);

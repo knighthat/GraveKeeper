@@ -44,19 +44,19 @@ public final class Content implements Serializable, OfferPlaceholders {
     private static final long serialVersionUID = 5497077563272859582L;
 
     private @NonNull Map<Integer, ItemStack> items = new HashMap<>(0);
-    private @Range(from = 0, to = Integer.MAX_VALUE) int experience = 0;
+    private @Range ( from = 0, to = Integer.MAX_VALUE ) int experience = 0;
 
     /**
      * @return Item and where it goes in Inventory
      */
-    public @NonNull Map<Integer, ItemStack> items() {
+    public @NonNull Map<Integer, ItemStack> items () {
         return this.items;
     }
 
     /**
      * @return Experience points
      */
-    public @Range(from = 0, to = Integer.MAX_VALUE) int experience() {
+    public @Range ( from = 0, to = Integer.MAX_VALUE ) int experience () {
         return this.experience;
     }
 
@@ -67,10 +67,10 @@ public final class Content implements Serializable, OfferPlaceholders {
      *
      * @param recipient The items and experience are given to
      */
-    public void giveTo(@NonNull Player recipient) {
+    public void giveTo ( @NonNull Player recipient ) {
         PlayerInventory inventory = recipient.getInventory();
 
-        items.forEach((s, i) -> {
+        items.forEach(( s, i ) -> {
             if (inventory.firstEmpty() > -1) {
                 int slot = inventory.getItem(s) != null ? inventory.firstEmpty() : s;
                 inventory.setItem(slot, i);
@@ -87,9 +87,9 @@ public final class Content implements Serializable, OfferPlaceholders {
      * @return Pair of %place_holder:[replacement]
      */
     @Override
-    public @NonNull Map<String, String> replacements() {
+    public @NonNull Map<String, String> replacements () {
         StringJoiner joiner = new StringJoiner(",", "[", "]");
-        this.items.forEach((s, i) -> {
+        this.items.forEach(( s, i ) -> {
             int amount = i.getAmount();
             String name = i.getType().name().toLowerCase();
 
@@ -109,10 +109,11 @@ public final class Content implements Serializable, OfferPlaceholders {
      * Better comparison algorithm
      *
      * @param obj reference object
+     *
      * @return true if values are similar, otherwise, false.
      */
     @Override
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals ( @Nullable Object obj ) {
         return obj instanceof Content storage
                 && storage.experience() == this.experience
                 && storage.items() == this.items;
@@ -124,7 +125,7 @@ public final class Content implements Serializable, OfferPlaceholders {
      * @return [item=[%MATERIAL],exp=%exp]
      */
     @Override
-    public String toString() {
+    public String toString () {
         StringJoiner items = new StringJoiner(",", "items=[", "]");
         this.items.values().stream()
                 .map(ItemStack::getType)

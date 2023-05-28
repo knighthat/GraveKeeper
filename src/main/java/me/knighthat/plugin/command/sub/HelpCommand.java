@@ -20,10 +20,10 @@
 
 package me.knighthat.plugin.command.sub;
 
-import me.knighthat.api.command.SubCommand;
 import me.knighthat.api.command.conditions.Preconditions;
 import me.knighthat.debugger.Debugger;
 import me.knighthat.plugin.command.CommandManager;
+import me.knighthat.plugin.command.SubCommand;
 import me.knighthat.plugin.file.MessageFile;
 import me.knighthat.plugin.message.Messenger;
 import org.bukkit.command.CommandSender;
@@ -42,7 +42,7 @@ public class HelpCommand extends SubCommand implements Preconditions {
     private static @NotNull String footer = "";
     private static @NotNull String header = "";
 
-    public static void reload() {
+    public static void reload () {
         COMMAND_TEMPLATES.clear();
 
         MessageFile file = Messenger.FILE;
@@ -77,13 +77,13 @@ public class HelpCommand extends SubCommand implements Preconditions {
         }
     }
 
-    public static int total() {
+    public static int total () {
         float divided = COMMAND_TEMPLATES.size() / 3f;
         return (int) Math.ceil(divided);
     }
 
     @Override
-    public void dispatch(@NotNull CommandSender sender, String @NotNull [] args) {
+    public void dispatch ( @NotNull CommandSender sender, String @NotNull [] args ) {
         int page = args.length > 1 ? Integer.parseInt(args[1]) : 1;
 
         String replacedHeader = replacePage(header, page);
@@ -91,20 +91,20 @@ public class HelpCommand extends SubCommand implements Preconditions {
         Messenger.sendCommandHelp(sender, replacedHeader, replacedFooter, this.get(page));
     }
 
-    @Contract("_,_ -> new")
-    private @NotNull String replacePage(@NotNull String input, int page) {
+    @Contract ( "_,_ -> new" )
+    private @NotNull String replacePage ( @NotNull String input, int page ) {
         return input
                 .replace("%current_page", String.valueOf(page))
                 .replace("%total_page", String.valueOf(total()));
     }
 
-    private @NotNull List<HelpTemplate> get(int page) {
-        int start = (page - 1) * 3;
+    private @NotNull List<HelpTemplate> get ( int page ) {
+        int start = ( page - 1 ) * 3;
         int stop = start + 3;
 
         List<HelpTemplate> results = new ArrayList<>();
 
-        for (int i = start; i < stop; i++) {
+        for (int i = start ; i < stop ; i++) {
             if (i >= COMMAND_TEMPLATES.size()) break;
 
             results.add(COMMAND_TEMPLATES.get(i));
@@ -114,7 +114,7 @@ public class HelpCommand extends SubCommand implements Preconditions {
     }
 
     @Override
-    public boolean prerequisite(@NotNull CommandSender sender, String @NotNull [] args) {
+    public boolean prerequisite ( @NotNull CommandSender sender, String @NotNull [] args ) {
         String messagePath = "";
         if (args.length > 1) {
             try {
@@ -136,7 +136,7 @@ public class HelpCommand extends SubCommand implements Preconditions {
                                @NotNull List<String> permissions,
                                @NotNull List<String> description) {
         @Override
-        public String toString() {
+        public String toString () {
             StringJoiner joiner = new StringJoiner("\n");
 
             joiner.add(this.usage);

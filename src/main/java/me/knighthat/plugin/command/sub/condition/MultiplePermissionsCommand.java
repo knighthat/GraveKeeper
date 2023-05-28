@@ -20,8 +20,8 @@
 
 package me.knighthat.plugin.command.sub.condition;
 
-import me.knighthat.api.command.SubCommand;
 import me.knighthat.api.command.permission.MultiplePermissions;
+import me.knighthat.plugin.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -30,23 +30,23 @@ import org.jetbrains.annotations.Nullable;
 public abstract class MultiplePermissionsCommand extends SubCommand implements MultiplePermissions {
 
     @Override
-    public @NotNull String selfPermission() {
+    public @NotNull String selfPermission () {
         return this.permission("self");
     }
 
     @Override
-    public @NotNull String globalPermission() {
+    public @NotNull String globalPermission () {
         return this.permission("players");
     }
 
-    private @NotNull String permission(@NotNull String type) {
+    private @NotNull String permission ( @NotNull String type ) {
         return "grave.command." + super.name() + "." + type;
     }
 
-    protected boolean hasPermission(@NotNull CommandSender sender, @Nullable Player target) {
+    protected boolean hasPermission ( @NotNull CommandSender sender, @Nullable Player target ) {
         boolean hasSelfPerm = target == sender && sender.hasPermission(this.selfPermission());
         boolean hasGlobalPerm = target != sender && sender.hasPermission(this.globalPermission());
 
-        return target != null && target.isOnline() && (hasSelfPerm || hasGlobalPerm);
+        return target != null && target.isOnline() && ( hasSelfPerm || hasGlobalPerm );
     }
 }

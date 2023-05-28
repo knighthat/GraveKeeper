@@ -42,7 +42,7 @@ public final class PeakMenu extends PluginMenu implements DisplayOnly {
 
     private static final @NotNull String PATH = "peak_menu";
 
-    private PeakMenu(@NotNull String title, @Range(from = 1, to = 54) int size) {
+    private PeakMenu ( @NotNull String title, @Range ( from = 1, to = 54 ) int size ) {
         super(null);
         if (Messenger.isPaper) {
             Component titleComponent = AdventureHex.parse(title);
@@ -53,7 +53,7 @@ public final class PeakMenu extends PluginMenu implements DisplayOnly {
         }
     }
 
-    public static @Nullable PeakMenu create(@NotNull Grave grave) {
+    public static @Nullable PeakMenu create ( @NotNull Grave grave ) {
         ConfigurationSection section = GraveKeeper.MENU.section(PATH);
         if (section == null) return null;
 
@@ -61,7 +61,7 @@ public final class PeakMenu extends PluginMenu implements DisplayOnly {
         title = PlaceHolder.replace(title, grave);
 
         PeakMenu menu = new PeakMenu(title, 54);
-        grave.getContent().items().forEach((s, i) -> {
+        grave.getContent().items().forEach(( s, i ) -> {
             MenuItem item = new MenuItem(i, new CancelEventButton());
             menu.setItem(s, item);
         });

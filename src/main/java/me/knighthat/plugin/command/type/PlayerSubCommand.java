@@ -35,10 +35,10 @@ public abstract class PlayerSubCommand extends MultiplePermissionsCommand implem
     // Template: /grave <SubCommand> [player]
 
     @Override
-    public boolean prerequisite(@NotNull CommandSender sender, String @NotNull [] args) {
+    public boolean prerequisite ( @NotNull CommandSender sender, String @NotNull [] args ) {
         switch (args.length) {
             case 1:
-                if (!(sender instanceof Player))
+                if (!( sender instanceof Player ))
                     Messenger.send(sender, "cmd_requires_player", null, null, null);
                 else break;
             case 0:
@@ -58,18 +58,18 @@ public abstract class PlayerSubCommand extends MultiplePermissionsCommand implem
     }
 
     @Override
-    public boolean hasPermission(@NotNull CommandSender sender, String @NotNull [] args) {
+    public boolean hasPermission ( @NotNull CommandSender sender, String @NotNull [] args ) {
         Player target = args.length >= 2 ? Bukkit.getPlayer(args[1]) : (Player) sender;
         return super.hasPermission(sender, target);
     }
 
     @Override
-    public void dispatch(@NotNull CommandSender sender, String @NotNull [] args) {
+    public void dispatch ( @NotNull CommandSender sender, String @NotNull [] args ) {
         Player target = args.length >= 2 ? Bukkit.getPlayer(args[1]) : (Player) sender;
         assert target != null && target.isOnline();
 
         this.dispatch(sender, target, args);
     }
 
-    public abstract void dispatch(@NotNull CommandSender sender, @NotNull Player player, String @NotNull [] args);
+    public abstract void dispatch ( @NotNull CommandSender sender, @NotNull Player player, String @NotNull [] args );
 }
