@@ -36,19 +36,19 @@ public class DataHandler {
 
     private static final @NonNull PersistentDataType<byte[], Grave[]> CHEST = new GraveArrayDataType();
     private static final @NonNull PersistentDataType<String, String> ID = PersistentDataType.STRING;
-    public static @NonNull NamespacedKey KEY;
+    public static NamespacedKey KEY;
 
     /*
 
         GRAVE
 
     */
-    public static @NonNull String pull(@NonNull TileState state) {
+    public static @NonNull String pull ( @NonNull TileState state ) {
         PersistentDataContainer container = state.getPersistentDataContainer();
         return container.has(KEY, ID) ? container.get(KEY, ID) : "";
     }
 
-    public static void push(@NonNull TileState state, @NonNull String id) {
+    public static void push ( @NonNull TileState state, @NonNull String id ) {
         state.getPersistentDataContainer().set(KEY, ID, id);
         state.update();
     }
@@ -59,7 +59,7 @@ public class DataHandler {
         PLAYER
 
     */
-    public static Grave @NonNull [] pull(@NonNull Player player) {
+    public static Grave @NonNull [] pull ( @NonNull Player player ) {
         UUID playerUID = player.getUniqueId();
 
         if (!GRAVE_LIST.containsKey(playerUID)) {
@@ -72,7 +72,7 @@ public class DataHandler {
     }
 
 
-    public static void push(@NonNull Player player, @NonNull Grave grave) {
+    public static void push ( @NonNull Player player, @NonNull Grave grave ) {
         Grave[] graves = pull(player);
         Grave[] newArr = Arrays.copyOf(graves, graves.length + 1);
         newArr[graves.length] = grave;
@@ -80,26 +80,26 @@ public class DataHandler {
         set(player, newArr);
     }
 
-    public static @NonNull Grave get(@NonNull Player player, @NonNull String id) {
+    public static @NonNull Grave get ( @NonNull Player player, @NonNull String id ) {
         return Arrays.stream(pull(player))
                 .filter(c -> c.getId().equals(id))
                 .findFirst()
                 .orElse(new Grave());
     }
 
-    public static void set(@NonNull Player player, @NonNull Grave[] graves) {
+    public static void set ( @NonNull Player player, @NonNull Grave[] graves ) {
         GRAVE_LIST.put(player.getUniqueId(), graves);
         player.getPersistentDataContainer().set(KEY, CHEST, graves);
     }
 
-    public static void remove(@NonNull Player player, @NonNull String id) {
+    public static void remove ( @NonNull Player player, @NonNull String id ) {
         Set<Grave> graves = new HashSet<>(List.of(pull(player)));
         graves.removeIf(c -> c.getId().equals(id));
 
         set(player, graves.toArray(Grave[]::new));
     }
 
-    public static void reset(@NonNull Player player) {
+    public static void reset ( @NonNull Player player ) {
         for (Grave grave : pull(player))
             grave.remove();
 

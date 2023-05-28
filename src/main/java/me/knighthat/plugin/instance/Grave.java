@@ -22,9 +22,6 @@ package me.knighthat.plugin.instance;
 
 import lombok.Data;
 import lombok.NonNull;
-import me.knighthat.KnightHatAPI;
-import me.knighthat.api.message.PlainTextMessage;
-import me.knighthat.api.style.hex.SpigotHex;
 import me.knighthat.plugin.GraveKeeper;
 import me.knighthat.utils.Validation;
 import me.knighthat.utils.placeholder.OfferPlaceholders;
@@ -33,10 +30,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.block.data.type.Chest;
 import org.bukkit.block.data.type.WallSign;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -135,42 +130,8 @@ public final class Grave implements Serializable, OfferPlaceholders {
         this.material = material;
         loc.getBlock().setType(material);
 
-        ConfigurationSection section = GraveKeeper.CONFIG.section("epitaph");
-        if (section == null || !section.getBoolean("enabled", false)) return;
-
-        BlockFace facing = ( (Chest) loc.getBlock().getBlockData() ).getFacing();
-        Block adjacent = loc.getBlock().getRelative(facing);
-        if (!adjacent.isEmpty()) return;
-
-        String signPath = section.getName().concat(".material");
-        Material signMaterial = GraveKeeper.CONFIG.material(signPath, Material.OAK_WALL_SIGN);
-        if (!signMaterial.name().endsWith("WALL_SIGN"))
-            signMaterial = Material.OAK_WALL_SIGN;
-        adjacent.setType(signMaterial);
-
-        Player owner = this.owner();
-        List<String> texts = section.getStringList("texts");
-        Sign sign = (Sign) adjacent.getState();
-
-        for (int i = 0 ; i < 4 ; i++) {
-            String line = texts.get(i);
-            PlainTextMessage copy = new PlainTextMessage(line);
-            copy.replace(this);
-
-            if (owner != null) {
-                if (KnightHatAPI.IS_PAPER)
-                    copy.postBuildReplace("%display", owner.displayName());
-                else
-                    copy.replace("%display", owner.getDisplayName());
-                copy.replace("%player", owner.getName());
-            }
-
-            if (KnightHatAPI.IS_PAPER)
-                sign.line(i, copy.build());
-            else
-                sign.setLine(i, SpigotHex.parse(copy.getMessage()));
-        }
-        sign.update();
+        if (GraveKeeper.CONFIG.Boolean("epitaph.enabled"))
+            new Epitaph().place(this);
     }
 
     /**

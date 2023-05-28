@@ -28,30 +28,25 @@ import me.knighthat.plugin.file.MenuFile;
 import me.knighthat.plugin.file.MessageFile;
 import me.knighthat.plugin.message.Messenger;
 import me.knighthat.plugin.persistent.DataHandler;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class GraveKeeper extends JavaPlugin {
 
-    public static GraveKeeper INSTANCE;
-
     public static MenuFile MENU;
     public static ConfigFile CONFIG;
 
     @Override
-    public void onEnable() {
-        INSTANCE = this;
+    public void onEnable () {
+        KnightHatAPI.init(this);                        // Initialize API
 
-        KnightHatAPI.init(this);
-
+        // Generate NamespacedKey for Plugin
         DataHandler.KEY = new NamespacedKey(this, getDescription().getName());
 
-        CONFIG = new ConfigFile(this);
-        Messenger.FILE = new MessageFile(this);
-        Messenger.AUDIENCES = BukkitAudiences.create(this);
-        MENU = new MenuFile(this);
+        CONFIG = new ConfigFile(this);                  // Initialize Config file
+        Messenger.FILE = new MessageFile(this);         // Initialize Message file
+        MENU = new MenuFile(this);                      // Initialize Menu file
 
         // Register event handler to Server
         getServer().getPluginManager().registerEvents(new EventController(), this);

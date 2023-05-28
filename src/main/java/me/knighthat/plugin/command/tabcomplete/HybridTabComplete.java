@@ -36,12 +36,12 @@ public interface HybridTabComplete extends TabCompleter {
 
     @Override
     @NonNull
-    default List<String> tabComplete(@NonNull CommandSender sender, @NonNull String s, String @NonNull [] args) {
+    default List<String> tabComplete ( @NonNull CommandSender sender, @NonNull String s, String @NonNull [] args ) {
         List<String> results = new ArrayList<>();
 
         switch (args.length) {
             case 2 -> {
-                if (!(sender instanceof Player player))
+                if (!( sender instanceof Player player ))
                     break;
 
                 Grave[] graves = DataHandler.pull(player);

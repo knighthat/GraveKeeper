@@ -18,8 +18,9 @@
  *  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.knighthat.api.command;
+package me.knighthat.plugin.command;
 
+import me.knighthat.api.command.PluginCommand;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class SubCommand extends PluginCommand {
@@ -27,7 +28,7 @@ public abstract class SubCommand extends PluginCommand {
     protected final @NotNull String PERMISSION = "grave.command.";
 
     @Override
-    public @NotNull String name() {
+    public @NotNull String name () {
         String className = getClass().getSimpleName().toLowerCase();
         return className.replace("command", "");
     }

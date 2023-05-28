@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 public class DeleteCommand extends HybridSubCommand implements HybridTabComplete {
 
     @Override
-    public void dispatch(@NotNull CommandSender sender, @NotNull Player target, @NotNull Grave grave) {
+    public void dispatch ( @NotNull CommandSender sender, @NotNull Player target, @NotNull Grave grave ) {
         DataHandler.remove(target, grave.getId());
         grave.remove();
 

@@ -37,7 +37,7 @@ public abstract class HybridSubCommand extends MultiplePermissionsCommand implem
     // Template: /grave <SubCommand> <id> [player]
 
     @Override
-    public boolean prerequisite(@NotNull CommandSender sender, String @NotNull [] args) {
+    public boolean prerequisite ( @NotNull CommandSender sender, String @NotNull [] args ) {
         switch (args.length) {
             case 2:
                 if (sender instanceof Player) break;
@@ -61,13 +61,13 @@ public abstract class HybridSubCommand extends MultiplePermissionsCommand implem
     }
 
     @Override
-    public boolean hasPermission(@NotNull CommandSender sender, String @NotNull [] args) {
+    public boolean hasPermission ( @NotNull CommandSender sender, String @NotNull [] args ) {
         Player target = args.length >= 3 ? Bukkit.getPlayer(args[2]) : (Player) sender;
         return super.hasPermission(sender, target);
     }
 
     @Override
-    public void dispatch(@NotNull CommandSender sender, String @NotNull [] args) {
+    public void dispatch ( @NotNull CommandSender sender, String @NotNull [] args ) {
         Player target = args.length >= 3 ? Bukkit.getPlayer(args[2]) : (Player) sender;
         assert target != null && target.isOnline();
 
@@ -84,5 +84,5 @@ public abstract class HybridSubCommand extends MultiplePermissionsCommand implem
         this.dispatch(sender, target, grave);
     }
 
-    public abstract void dispatch(@NotNull CommandSender sender, @NotNull Player target, @NotNull Grave grave);
+    public abstract void dispatch ( @NotNull CommandSender sender, @NotNull Player target, @NotNull Grave grave );
 }

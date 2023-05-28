@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 public class PeakCommand extends HybridSubCommand implements PlayerCommand, HybridTabComplete {
 
     @Override
-    public void dispatch(@NotNull CommandSender sender, @NotNull Player target, @NotNull Grave grave) {
+    public void dispatch ( @NotNull CommandSender sender, @NotNull Player target, @NotNull Grave grave ) {
         Player player = (Player) sender;
 
         PeakMenu menu = PeakMenu.create(grave);
